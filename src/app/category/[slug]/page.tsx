@@ -14,7 +14,7 @@ export async function generateMetadata({
   const { slug } = await params;
   const category = getCategoryBySlug(slug);
   return {
-    title: category ? `${category.name.en} — Ghorer Bazar` : "Ghorer Bazar",
+    title: category ? `${category.name.en} — Tiffani & Blue` : "Tiffani & Blue",
   };
 }
 

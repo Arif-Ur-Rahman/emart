@@ -81,7 +81,7 @@ export function Footer() {
               <Phone className="h-4 w-4" /> +880 1700-000000
             </li>
             <li className="flex items-center gap-2">
-              <Mail className="h-4 w-4" /> hello@ghorerbazar.demo
+              <Mail className="h-4 w-4" /> hello@tiffaniandblue.demo
             </li>
           </ul>
         </div>

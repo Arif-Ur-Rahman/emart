@@ -1,8 +1,7 @@
-# Ghorer Bazar — Storefront (Frontend)
+# Tiffani & Blue — Storefront (Frontend)
 
-A bilingual (English / বাংলা) ecommerce storefront for organic food, modeled on
-[ghorerbazar.com](https://ghorerbazar.com/). Built with **Next.js (App Router) +
-TypeScript + Tailwind CSS + shadcn/ui**.
+A bilingual (English / বাংলা) ecommerce storefront for fine & fashion jewellery.
+Built with **Next.js (App Router) + TypeScript + Tailwind CSS + shadcn/ui**.
 
 > **Status:** Frontend only. All product data is mock/static and the cart is
 > client-side (persisted to `localStorage`). A backend will be connected later.

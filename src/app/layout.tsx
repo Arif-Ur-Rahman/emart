@@ -23,9 +23,9 @@ const bangla = Hind_Siliguri({
 });
 
 export const metadata: Metadata = {
-  title: "Ghorer Bazar — Pure & Organic Food",
+  title: "Tiffani & Blue — Fine & Fashion Jewellery",
   description:
-    "Authentic, pure and organic food delivered to your door — honey, ghee, mustard oil, dates, nuts and more.",
+    "Exquisite fine and fashion jewellery delivered to your door — rings, necklaces, earrings, bracelets and more.",
 };
 
 export default function RootLayout({

@@ -71,9 +71,9 @@ export const dictionaries = {
     "badge.new": "New",
     "badge.organic": "Organic",
 
-    "footer.about.title": "Ghorer Bazar",
+    "footer.about.title": "Tiffani & Blue",
     "footer.about.desc":
-      "Bringing authentic, pure and organic food from trusted sources straight to your home.",
+      "Bringing exquisite fine and fashion jewellery from trusted craftspeople straight to your home.",
     "footer.shop": "Shop",
     "footer.help": "Help",
     "footer.help.faq": "FAQ",
@@ -157,8 +157,8 @@ export const dictionaries = {
     "badge.new": "নতুন",
     "badge.organic": "অর্গানিক",
 
-    "footer.about.title": "ঘরের বাজার",
-    "footer.about.desc": "বিশ্বস্ত উৎস থেকে খাঁটি ও অর্গানিক খাবার সরাসরি আপনার ঘরে পৌঁছে দিচ্ছি।",
+    "footer.about.title": "টিফানি অ্যান্ড ব্লু",
+    "footer.about.desc": "বিশ্বস্ত কারিগরদের কাছ থেকে অসাধারণ ফাইন ও ফ্যাশন গয়না সরাসরি আপনার ঘরে পৌঁছে দিচ্ছি।",
     "footer.shop": "শপ",
     "footer.help": "সহায়তা",
     "footer.help.faq": "প্রশ্নোত্তর",

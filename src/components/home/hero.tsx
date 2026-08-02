@@ -1,66 +1,95 @@
-"use client";
-
-import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { useLanguage } from "@/i18n/language-context";
-import { buttonVariants } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import Link from "next/link";
 
+import { ProductMotif } from "@/components/product/product-motif";
+import { Button } from "@/components/ui/button";
+
+/**
+ * Editorial opener: a stacked ornament collage on the right, the price promise
+ * on the left. No photography needed.
+ */
 export function Hero() {
-  const { t } = useLanguage();
   return (
-    <section className="relative overflow-hidden bg-gradient-to-br from-amber-50/60 via-background to-background">
-      <div className="mx-auto grid max-w-7xl items-center gap-8 px-4 py-12 md:grid-cols-2 md:py-20">
-        <div className="text-center md:text-left">
-          <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
-            🌿 100% Organic · খাঁটি পণ্য
-          </span>
-          <h1 className="mt-4 whitespace-pre-line text-3xl font-extrabold leading-tight tracking-tight sm:text-4xl md:text-5xl">
-            {t("home.hero.title")}
-          </h1>
-          <p className="mx-auto mt-4 max-w-md text-base text-muted-foreground md:mx-0">
-            {t("home.hero.subtitle")}
+    <section className="relative overflow-hidden border-b bg-gradient-to-br from-secondary via-background to-accent/60">
+      <div className="mx-auto grid max-w-7xl items-center gap-12 px-4 py-16 sm:px-6 md:grid-cols-2 md:py-24 lg:px-8">
+        <div className="space-y-6">
+          <p className="text-xs tracking-[0.24em] text-primary uppercase">
+            Handmade in Bangladesh
           </p>
-          <div className="mt-6 flex flex-wrap justify-center gap-3 md:justify-start">
-            <Link
-              href="/shop"
-              className={cn(buttonVariants({ size: "lg" }), "rounded-full")}
-            >
-              {t("home.hero.cta")}
-              <ArrowRight className="ml-1 h-4 w-4" />
-            </Link>
-            <Link
-              href="/#categories"
-              className={cn(
-                buttonVariants({ size: "lg", variant: "outline" }),
-                "rounded-full"
-              )}
-            >
-              {t("home.hero.cta2")}
-            </Link>
-          </div>
-        </div>
 
-        <div className="relative hidden justify-center md:flex">
-          <div className="grid grid-cols-2 gap-4">
+          <h1 className="font-heading text-4xl leading-[1.05] font-semibold text-balance-heading sm:text-5xl lg:text-6xl">
+            Small, gorgeous things
+            <span className="block text-primary">worn every day.</span>
+          </h1>
+
+          <p className="max-w-md text-base leading-relaxed text-muted-foreground">
+            Bangles, hair bands, jhumkas and nakshi crafts — made in small
+            batches by women artisans. Everything in the shop sits between{" "}
+            <span className="font-medium text-foreground">৳100</span> and{" "}
+            <span className="font-medium text-foreground">৳1,500</span>.
+          </p>
+
+          <div className="flex flex-wrap items-center gap-3">
+            <Button asChild size="lg" className="h-11 px-7">
+              <Link href="/shop">
+                Shop the collection
+                <ArrowRight className="size-4" />
+              </Link>
+            </Button>
+            <Button asChild size="lg" variant="outline" className="h-11 px-7">
+              <Link href="/collections/handmade-crafts">Handmade crafts</Link>
+            </Button>
+          </div>
+
+          <dl className="flex flex-wrap gap-x-10 gap-y-4 pt-4">
             {[
-              { e: "🍯", g: "from-amber-50 to-amber-100" },
-              { e: "🧈", g: "from-amber-50 to-yellow-100" },
-              { e: "🌰", g: "from-orange-50 to-amber-100" },
-              { e: "🥜", g: "from-amber-50 to-orange-100" },
-            ].map((it, i) => (
-              <div
-                key={i}
-                className={`flex h-32 w-32 items-center justify-center rounded-3xl border border-foreground/5 bg-gradient-to-br shadow-sm ${it.g} ${
-                  i % 2 === 1 ? "translate-y-6" : ""
-                }`}
-              >
-                <span className="text-6xl">{it.e}</span>
+              { value: "32", label: "pieces in stock" },
+              { value: "৳100+", label: "starting price" },
+              { value: "Free", label: "delivery over ৳1,000" },
+            ].map((stat) => (
+              <div key={stat.label}>
+                <dt className="font-heading text-2xl font-semibold lining-nums">
+                  {stat.value}
+                </dt>
+                <dd className="text-xs tracking-wide text-muted-foreground uppercase">
+                  {stat.label}
+                </dd>
               </div>
             ))}
+          </dl>
+        </div>
+
+        <div className="relative">
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-4">
+              <Collage seed="kanchan-glass-bangle-set" className="aspect-4/5" />
+              <Collage seed="tiny-lotus-studs" className="aspect-square" />
+            </div>
+            <div className="space-y-4 pt-10">
+              <Collage seed="chandbali-jhumka" className="aspect-square" />
+              <Collage
+                seed="malati-flower-headband"
+                className="aspect-4/5"
+              />
+            </div>
           </div>
+
+          <div
+            aria-hidden
+            className="absolute -bottom-6 -left-6 -z-10 size-40 rounded-full bg-gold/25 blur-3xl"
+          />
         </div>
       </div>
     </section>
+  );
+}
+
+function Collage({ seed, className }: { seed: string; className?: string }) {
+  return (
+    <div
+      className={`overflow-hidden rounded-xl border shadow-sm ${className ?? ""}`}
+    >
+      <ProductMotif seed={seed} className="size-full object-cover" />
+    </div>
   );
 }

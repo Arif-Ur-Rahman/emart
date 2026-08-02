@@ -1,111 +1,108 @@
-"use client";
-
+import { Star } from "lucide-react";
 import Link from "next/link";
-import { Star, ShoppingCart } from "lucide-react";
+
+import { ProductImage } from "@/components/product/product-image";
+import { QuickAddButton } from "@/components/product/quick-add-button";
+import { Badge } from "@/components/ui/badge";
+import { discountPercent, formatTaka } from "@/lib/currency";
 import type { Product } from "@/lib/types";
-import { getCategoryBySlug } from "@/lib/categories";
-import { useLanguage } from "@/i18n/language-context";
-import { useCart } from "@/context/cart-context";
-import { formatPrice, formatNumber, discountPercent } from "@/lib/format";
-import { ProductImage } from "./product-image";
-import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
-function badgeClasses(badge: string) {
-  switch (badge) {
-    case "bestseller":
-      return "bg-primary text-primary-foreground";
-    case "new":
-      return "bg-foreground text-background";
-    case "organic":
-      return "border border-foreground/15 bg-background/90 text-foreground backdrop-blur";
-    default:
-      return "bg-muted text-foreground";
-  }
-}
+const TAG_LABELS: Record<Product["tags"][number], string> = {
+  new: "New",
+  bestseller: "Bestseller",
+  handmade: "Handmade",
+  limited: "Limited",
+};
 
-export function ProductCard({ product }: { product: Product }) {
-  const { t, tl, lang } = useLanguage();
-  const { addItem } = useCart();
-  const category = getCategoryBySlug(product.categorySlug);
-  const discount = discountPercent(product.price, product.originalPrice);
-  const defaultVariant = product.weightOptions?.[0];
+export function ProductCard({
+  product,
+  priority,
+  className,
+}: {
+  product: Product;
+  priority?: boolean;
+  className?: string;
+}) {
+  const discount = discountPercent(product.price, product.compareAtPrice);
+  const soldOut = product.stock === 0;
+  const lowStock = !soldOut && product.stock <= 8;
+  // One badge only — the card gets noisy fast.
+  const headlineTag = product.tags.find(
+    (tag) => tag === "new" || tag === "limited" || tag === "bestseller",
+  );
 
   return (
-    <div className="group relative flex flex-col overflow-hidden rounded-2xl border bg-card transition-shadow hover:shadow-md">
-      <Link
-        href={`/products/${product.slug}`}
-        className="relative block aspect-square overflow-hidden"
-      >
-        <ProductImage
-          emoji={product.emoji ?? category?.emoji ?? "🛍️"}
-          gradient={category?.gradient ?? "from-stone-100 to-stone-200"}
-          className="h-full w-full transition-transform duration-300 group-hover:scale-105"
-          emojiClassName="text-6xl sm:text-7xl"
-        />
-        <div className="absolute left-2 top-2 flex flex-col gap-1">
-          {discount !== null && (
-            <span className="rounded-full bg-foreground px-2 py-0.5 text-xs font-semibold text-background">
-              -{formatNumber(discount, lang)}%
-            </span>
-          )}
-          {product.badges?.slice(0, 1).map((b) => (
-            <span
-              key={b}
-              className={cn(
-                "rounded-full px-2 py-0.5 text-xs font-semibold",
-                badgeClasses(b)
-              )}
-            >
-              {t(`badge.${b}` as never)}
-            </span>
-          ))}
-        </div>
-      </Link>
+    <article className={cn("group relative", className)}>
+      <Link href={`/products/${product.slug}`} className="block">
+        <div className="relative aspect-square overflow-hidden rounded-lg border bg-muted">
+          <ProductImage
+            src={product.image}
+            alt={product.name}
+            seed={product.slug}
+            priority={priority}
+            sizes="(min-width: 1280px) 22vw, (min-width: 768px) 30vw, 45vw"
+            className="transition-transform duration-500 group-hover:scale-105"
+          />
 
-      <div className="flex flex-1 flex-col p-3 sm:p-4">
-        {product.rating !== undefined && (
-          <div className="mb-1 flex items-center gap-1 text-xs text-muted-foreground">
-            <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
-            <span className="font-medium text-foreground">
-              {formatNumber(product.rating, lang)}
-            </span>
-            {product.reviewCount !== undefined && (
-              <span>({formatNumber(product.reviewCount, lang)})</span>
+          <div className="absolute left-2.5 top-2.5 flex flex-col items-start gap-1.5">
+            {discount > 0 && (
+              <Badge className="bg-primary text-primary-foreground">
+                −{discount}%
+              </Badge>
+            )}
+            {headlineTag && discount === 0 && (
+              <Badge variant="secondary" className="bg-background/90 backdrop-blur">
+                {TAG_LABELS[headlineTag]}
+              </Badge>
             )}
           </div>
-        )}
 
-        <Link href={`/products/${product.slug}`} className="flex-1">
-          <h3 className="line-clamp-2 text-sm font-semibold leading-snug sm:text-base">
-            {tl(product.name)}
+          {soldOut && (
+            <div className="absolute inset-0 grid place-items-center bg-background/70">
+              <span className="text-xs font-medium uppercase tracking-[0.2em] text-foreground">
+                Sold out
+              </span>
+            </div>
+          )}
+        </div>
+
+        <div className="mt-3 space-y-1">
+          <h3 className="text-sm leading-snug font-medium group-hover:text-primary">
+            {product.name}
           </h3>
-          <p className="mt-1 line-clamp-1 text-xs text-muted-foreground">
-            {tl(product.shortDesc)}
-          </p>
-        </Link>
 
-        <div className="mt-3 flex items-end justify-between gap-2">
-          <div className="flex flex-col">
-            <span className="text-base font-bold text-primary sm:text-lg">
-              {formatPrice(product.price, lang)}
+          <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+            <Star className="size-3 fill-gold text-gold" />
+            <span className="tabular-nums">{product.rating.toFixed(1)}</span>
+            <span aria-hidden>·</span>
+            <span className="tabular-nums">{product.reviewCount} reviews</span>
+          </div>
+
+          <div className="flex items-baseline gap-2 pt-0.5">
+            <span className="font-heading text-base font-semibold lining-nums tabular-nums">
+              {formatTaka(product.price)}
             </span>
-            {product.originalPrice && (
-              <span className="text-xs text-muted-foreground line-through">
-                {formatPrice(product.originalPrice, lang)}
+            {product.compareAtPrice && (
+              <span className="text-xs text-muted-foreground line-through tabular-nums">
+                {formatTaka(product.compareAtPrice)}
               </span>
             )}
           </div>
-          <Button
-            size="icon"
-            aria-label={t("product.addToCart")}
-            onClick={() => addItem(product, defaultVariant, 1)}
-            className="h-9 w-9 shrink-0 rounded-full"
-          >
-            <ShoppingCart className="h-4 w-4" />
-          </Button>
+
+          {lowStock && (
+            <p className="text-xs text-primary">Only {product.stock} left</p>
+          )}
+        </div>
+      </Link>
+
+      {/* Overlaid on the image, outside the <Link> so the click doesn't navigate.
+          Always visible on touch, revealed on hover for pointer devices. */}
+      <div className="pointer-events-none absolute inset-x-0 top-0 aspect-square">
+        <div className="pointer-events-auto absolute bottom-2.5 right-2.5 transition duration-200 md:translate-y-1 md:opacity-0 md:group-hover:translate-y-0 md:group-hover:opacity-100 md:focus-within:translate-y-0 md:focus-within:opacity-100">
+          <QuickAddButton product={product} />
         </div>
       </div>
-    </div>
+    </article>
   );
 }

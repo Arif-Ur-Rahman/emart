@@ -1,80 +1,96 @@
-# Tiffani & Blue — Storefront (Frontend)
+# Maloti
 
-A bilingual (English / বাংলা) ecommerce storefront for fine & fashion jewellery.
-Built with **Next.js (App Router) + TypeScript + Tailwind CSS + shadcn/ui**.
+Storefront for **Maloti**, a handmade ornaments and women's crafts shop in
+Bangladesh — bangles, hair bands, jhumkas, nakshi crafts. Everything in the
+catalogue is priced between **৳100 and ৳1,500**.
 
-> **Status:** Frontend only. All product data is mock/static and the cart is
-> client-side (persisted to `localStorage`). A backend will be connected later.
+Built with Next.js 16 (App Router), TypeScript, Tailwind CSS v4 and shadcn/ui.
 
-## Features
-
-- **Bilingual UI** — runtime English ⇄ বাংলা toggle (no page reload), persisted to
-  `localStorage`. Bangla digits and a Bangla web font (Hind Siliguri) are used when
-  the language is set to বাংলা.
-- **Browse** — home page (hero, trust bar, category grid, product rows), all-products
-  shop with category filter + sort, per-category pages, and product detail pages with
-  weight/size variants and quantity selection.
-- **Cart** — add to cart from cards or the detail page, slide-out cart drawer, and a
-  full `/cart` page. Subtotal, free-shipping threshold, and totals update live.
-- **Static generation** — every category and product route is prerendered via
-  `generateStaticParams`.
-
-## Getting started
+## Running it
 
 ```bash
 npm install
-npm run dev     # http://localhost:3000
-npm run build   # production build (also validates types + prerenders routes)
+npm run dev      # http://localhost:3000
+npm run build    # production build
+npm run lint
 ```
 
-## Project structure
+## What's here
+
+| Route                 | What it does                                                |
+| --------------------- | ----------------------------------------------------------- |
+| `/`                   | Hero, collections, most-loved and new-arrival grids          |
+| `/shop`               | Full catalogue with filters (collection, price, tag) + sort  |
+| `/collections/[slug]` | One collection, statically generated for all 8               |
+| `/products/[slug]`    | Product page with gallery, details, related items, JSON-LD   |
+| `/cart`               | Full bag with quantities and order summary                   |
+| `/about`              | Brand story                                                  |
+
+The shop page is server-rendered from the query string, so every filtered view
+is a shareable URL and filtering works without client JavaScript. Collection
+and product pages are prerendered at build time.
+
+## Structure
 
 ```
 src/
-  app/
-    layout.tsx              Root layout: fonts, providers, header/footer
-    page.tsx                Home
-    shop/page.tsx           All products (filter + sort)
-    category/[slug]/        Category listing (generateStaticParams)
-    products/[slug]/        Product detail (generateStaticParams + metadata)
-    cart/page.tsx           Full cart page
-    not-found.tsx
-  components/
-    layout/                 AnnouncementBar, Header, Footer, SearchBar
-    home/                   Hero, FeatureBar, CategoryGrid, ProductSection
-    product/                ProductCard, ProductGrid, ProductImage,
-                            QuantitySelector, ProductPurchase, ProductDetail
-    cart/                   CartDrawer, CartItemRow, CartSummary
-    category/               CategoryView
-    ui/                     shadcn/ui primitives
-    providers.tsx           LanguageProvider + CartProvider (+ global CartDrawer)
-    language-toggle.tsx
-  context/
-    cart-context.tsx        Client cart state, localStorage persistence
-  i18n/
-    dictionaries.ts         en / bn UI strings
-    language-context.tsx    LanguageProvider, useLanguage(), t() and tl()
-  lib/
-    types.ts                Product, Category, CartItem, Localized
-    categories.ts           Mock categories + getters
-    products.ts             Mock products + getters (the backend seam)
-    format.ts               formatPrice, Bangla digits, discount %
-    utils.ts                cn()
+├── app/                      # routes (App Router)
+├── components/
+│   ├── brand/                # logo and mark
+│   ├── cart/                 # provider, slide-out bag, cart page view
+│   ├── home/                 # homepage sections
+│   ├── layout/               # header, footer, nav, search
+│   ├── product/              # cards, grid, motif art, add-to-bag
+│   ├── shop/                 # filters and sort
+│   └── ui/                   # shadcn/ui primitives
+└── lib/
+    ├── data/                 # ← the seam to the backend
+    │   ├── catalog.ts        # seed products and categories
+    │   └── index.ts          # async accessors used by every page
+    ├── cart-store.ts         # localStorage-backed bag
+    ├── currency.ts           # Taka formatting, shipping rules
+    ├── search-params.ts      # query-string parsing for /shop
+    └── types.ts              # domain types
 ```
 
-## Connecting a backend later
+## Wiring up the Node.js backend
 
-All data access goes through the getter functions in `src/lib/products.ts` and
-`src/lib/categories.ts` (`getAllProducts`, `getProductBySlug`,
-`getProductsByCategory`, `getFeaturedProducts`, `getRelatedProducts`,
-`searchProducts`, `getAllCategories`, `getCategoryBySlug`). Replace their bodies with
-`fetch`/API calls (and make them `async` where needed) to wire up a real backend —
-the components and pages won't need to change shape.
+`src/lib/data/index.ts` is the only file that knows where products come from.
+Every function there is already `async` and returns plain serialisable objects
+matching `src/lib/types.ts`, so swapping the seed catalogue for the API means
+replacing the function bodies:
 
-## Notes
+```ts
+export async function getProducts(query: ProductQuery = {}): Promise<Product[]> {
+  const res = await fetch(`${process.env.API_URL}/products?${toQueryString(query)}`);
+  if (!res.ok) throw new Error("Failed to load products");
+  return res.json();
+}
+```
 
-- Product images are rendered as branded gradient + emoji placeholders
-  (`components/product/product-image.tsx`). Swap this component for `next/image` once
-  real photos exist.
-- Online checkout is intentionally disabled ("coming soon") until the backend exists.
-- The brand color is green, set via CSS variables in `src/app/globals.css`.
+No page or component imports `catalog.ts` directly, so nothing else changes.
+
+Still to build once the API exists:
+
+- **Checkout** — the checkout button in `CartView` currently shows a toast. It
+  needs an order endpoint, an address form, and bKash/Nagad/COD selection.
+- **Stock validation** — the bag trusts the price and stock snapshot it stored.
+  Re-validate against the API before an order is placed.
+- **Product images** — `Product.image` is optional; when it's absent the UI
+  draws a deterministic ornament motif (`ProductMotif`). Populate `image` with
+  paths under `/public` (or add the CDN host to `images.remotePatterns` in
+  `next.config.ts`) and photography takes over automatically.
+
+## Design notes
+
+- Brand tokens live in `src/app/globals.css` — warm ivory ground, deep
+  berry-rose primary, antique gold accent. Light and dark are both defined.
+- Headings use Cormorant Garamond, body copy uses Inter. Prices carry
+  `lining-nums` because Cormorant defaults to old-style figures.
+- The bag is stored in `localStorage` and read through `useSyncExternalStore`,
+  which gives correct hydration and cross-tab sync without effects.
+
+## Conventions
+
+`AGENTS.md` applies: this repo pins Next.js 16, whose APIs differ from older
+releases. Check `node_modules/next/dist/docs/` before writing framework code.

@@ -1,31 +1,47 @@
 import type { Metadata } from "next";
-import { Inter, Geist_Mono, Hind_Siliguri } from "next/font/google";
+import { Cormorant_Garamond, Inter } from "next/font/google";
+
+import { CartProvider } from "@/components/cart/cart-provider";
+import { CartSheet } from "@/components/cart/cart-sheet";
+import { SiteFooter } from "@/components/layout/site-footer";
+import { SiteHeader } from "@/components/layout/site-header";
+import { Toaster } from "@/components/ui/sonner";
+import { cn } from "@/lib/utils";
+
 import "./globals.css";
-import { Providers } from "@/components/providers";
-import { AnnouncementBar } from "@/components/layout/announcement-bar";
-import { Header } from "@/components/layout/header";
-import { Footer } from "@/components/layout/footer";
 
-const sans = Inter({
-  variable: "--font-sans",
+const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
+
+const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
-});
-
-const mono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
-const bangla = Hind_Siliguri({
-  variable: "--font-bangla",
   weight: ["400", "500", "600", "700"],
-  subsets: ["bengali"],
+  variable: "--font-heading",
 });
 
 export const metadata: Metadata = {
-  title: "Tiffani & Blue — Fine & Fashion Jewellery",
+  metadataBase: new URL("https://maloti.shop"),
+  title: {
+    default: "Maloti — Handmade ornaments & women's crafts",
+    template: "%s · Maloti",
+  },
   description:
-    "Exquisite fine and fashion jewellery delivered to your door — rings, necklaces, earrings, bracelets and more.",
+    "Handmade bangles, hair bands, earrings and women's crafts from Bangladesh. Everything between ৳100 and ৳1,500, with free delivery over ৳1,000.",
+  keywords: [
+    "Maloti",
+    "ornaments",
+    "handmade jewellery Bangladesh",
+    "bangles",
+    "hair bands",
+    "women's crafts",
+  ],
+  openGraph: {
+    title: "Maloti — Handmade ornaments & women's crafts",
+    description:
+      "Handmade bangles, hair bands, earrings and women's crafts from Bangladesh, from ৳100 to ৳1,500.",
+    type: "website",
+    locale: "en_BD",
+    siteName: "Maloti",
+  },
 };
 
 export default function RootLayout({
@@ -36,15 +52,16 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${sans.variable} ${mono.variable} ${bangla.variable} h-full antialiased`}
+      className={cn("font-sans antialiased", inter.variable, cormorant.variable)}
     >
-      <body className="min-h-full flex flex-col bg-background">
-        <Providers>
-          <AnnouncementBar />
-          <Header />
+      <body className="flex min-h-dvh flex-col">
+        <CartProvider>
+          <SiteHeader />
           <main className="flex-1">{children}</main>
-          <Footer />
-        </Providers>
+          <SiteFooter />
+          <CartSheet />
+          <Toaster position="bottom-right" />
+        </CartProvider>
       </body>
     </html>
   );

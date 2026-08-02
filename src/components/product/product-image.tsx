@@ -1,33 +1,39 @@
+import Image from "next/image";
+
+import { ProductMotif } from "@/components/product/product-motif";
 import { cn } from "@/lib/utils";
 
 /**
- * Lightweight placeholder "image" — a branded gradient tile with the product's
- * emoji. Avoids shipping real image assets while the catalog is still mock data.
- * Swap this component for next/image once real product photos exist.
+ * Renders product photography when it exists and falls back to the generated
+ * ornament motif when it doesn't, so the catalogue looks finished either way.
  */
 export function ProductImage({
-  emoji,
-  gradient,
+  src,
+  alt,
+  seed,
+  sizes,
+  priority,
   className,
-  emojiClassName,
 }: {
-  emoji: string;
-  gradient: string;
+  src?: string;
+  alt: string;
+  seed: string;
+  sizes: string;
+  priority?: boolean;
   className?: string;
-  emojiClassName?: string;
 }) {
+  if (!src) {
+    return <ProductMotif seed={seed} className={className} />;
+  }
+
   return (
-    <div
-      aria-hidden
-      className={cn(
-        "flex items-center justify-center bg-gradient-to-br",
-        gradient,
-        className
-      )}
-    >
-      <span className={cn("select-none drop-shadow-sm", emojiClassName)}>
-        {emoji}
-      </span>
-    </div>
+    <Image
+      src={src}
+      alt={alt}
+      fill
+      sizes={sizes}
+      priority={priority}
+      className={cn("object-cover", className)}
+    />
   );
 }

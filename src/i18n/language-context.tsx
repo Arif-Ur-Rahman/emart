@@ -10,7 +10,7 @@ import {
 import type { Locale, Localized } from "@/lib/types";
 import { dictionaries, type TranslationKey } from "./dictionaries";
 
-const STORAGE_KEY = "gb.lang";
+const STORAGE_KEY = "emart.lang";
 
 type LanguageContextValue = {
   lang: Locale;

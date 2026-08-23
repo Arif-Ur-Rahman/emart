@@ -27,10 +27,10 @@ export function CartItemRow({
         className="shrink-0"
       >
         <ProductImage
-          emoji={item.emoji}
-          gradient={item.gradient}
+          src={item.image}
+          alt={tl(item.name)}
           className="h-20 w-20 rounded-xl"
-          emojiClassName="text-3xl"
+          sizes="80px"
         />
       </Link>
 
@@ -39,7 +39,7 @@ export function CartItemRow({
           <Link
             href={`/products/${item.slug}`}
             onClick={onNavigate}
-            className="text-sm font-semibold leading-snug hover:text-primary"
+            className="text-sm font-semibold leading-snug hover:text-accent-foreground"
           >
             {tl(item.name)}
           </Link>

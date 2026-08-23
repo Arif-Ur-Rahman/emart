@@ -48,7 +48,7 @@ export default function ShopPage() {
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8">
-      <h1 className="text-2xl font-bold sm:text-3xl">{t("shop.title")}</h1>
+      <h1 className="font-heading text-2xl font-semibold sm:text-3xl">{t("shop.title")}</h1>
       <p className="mt-1 text-sm text-muted-foreground">
         {formatNumber(products.length, lang)} {t("shop.results")}
       </p>

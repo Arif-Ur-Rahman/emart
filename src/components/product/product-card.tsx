@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { Star, ShoppingCart } from "lucide-react";
 import type { Product } from "@/lib/types";
-import { getCategoryBySlug } from "@/lib/categories";
 import { useLanguage } from "@/i18n/language-context";
 import { useCart } from "@/context/cart-context";
 import { formatPrice, formatNumber, discountPercent } from "@/lib/format";
@@ -14,7 +13,7 @@ import { cn } from "@/lib/utils";
 function badgeClasses(badge: string) {
   switch (badge) {
     case "bestseller":
-      return "bg-primary text-primary-foreground";
+      return "bg-brand text-brand-foreground";
     case "new":
       return "bg-foreground text-background";
     case "organic":
@@ -27,9 +26,8 @@ function badgeClasses(badge: string) {
 export function ProductCard({ product }: { product: Product }) {
   const { t, tl, lang } = useLanguage();
   const { addItem } = useCart();
-  const category = getCategoryBySlug(product.categorySlug);
   const discount = discountPercent(product.price, product.originalPrice);
-  const defaultVariant = product.weightOptions?.[0];
+  const defaultVariant = product.sizeOptions?.[0];
 
   return (
     <div className="group relative flex flex-col overflow-hidden rounded-2xl border bg-card transition-shadow hover:shadow-md">
@@ -38,10 +36,9 @@ export function ProductCard({ product }: { product: Product }) {
         className="relative block aspect-square overflow-hidden"
       >
         <ProductImage
-          emoji={product.emoji ?? category?.emoji ?? "🛍️"}
-          gradient={category?.gradient ?? "from-stone-100 to-stone-200"}
+          src={product.image}
+          alt={tl(product.name)}
           className="h-full w-full transition-transform duration-300 group-hover:scale-105"
-          emojiClassName="text-6xl sm:text-7xl"
         />
         <div className="absolute left-2 top-2 flex flex-col gap-1">
           {discount !== null && (
@@ -77,7 +74,7 @@ export function ProductCard({ product }: { product: Product }) {
         )}
 
         <Link href={`/products/${product.slug}`} className="flex-1">
-          <h3 className="line-clamp-2 text-sm font-semibold leading-snug sm:text-base">
+          <h3 className="font-heading line-clamp-2 text-sm font-semibold leading-snug sm:text-base">
             {tl(product.name)}
           </h3>
           <p className="mt-1 line-clamp-1 text-xs text-muted-foreground">

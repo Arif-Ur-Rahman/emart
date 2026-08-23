@@ -7,7 +7,7 @@ export type Localized = {
 
 export type ProductBadge = "bestseller" | "new" | "organic";
 
-export type WeightOption = {
+export type SizeOption = {
   id: string;
   label: Localized;
   price: number;
@@ -20,29 +20,31 @@ export type Product = {
   name: Localized;
   shortDesc: Localized;
   description: Localized;
-  /** Base price (BDT). When weightOptions exist, this mirrors the default option. */
+  /** Base price (BDT). When sizeOptions exist, this mirrors the default option. */
   price: number;
   originalPrice?: number;
   categorySlug: string;
-  weightOptions?: WeightOption[];
+  /** Path to the product photo under /public. */
+  image: string;
+  sizeOptions?: SizeOption[];
   rating?: number;
   reviewCount?: number;
   badges?: ProductBadge[];
   featured?: boolean;
-  /** Emoji used by the placeholder image renderer. Falls back to category emoji. */
-  emoji?: string;
 };
 
 export type Category = {
   slug: string;
   name: Localized;
   tagline: Localized;
-  /** Emoji shown in the category card / image placeholder. */
+  /** Emoji shown in nav chips and filter dropdowns. */
   emoji: string;
   /** lucide-react icon name */
   icon: string;
-  /** Tailwind gradient classes for placeholder backgrounds. */
+  /** Tailwind gradient classes used behind photos. */
   gradient: string;
+  /** Path to the representative category photo under /public. */
+  image: string;
 };
 
 export type CartItem = {
@@ -53,8 +55,7 @@ export type CartItem = {
   variantId?: string;
   name: Localized;
   variantLabel?: Localized;
-  emoji: string;
-  gradient: string;
+  image: string;
   price: number;
   quantity: number;
 };

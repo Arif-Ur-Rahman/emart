@@ -23,7 +23,7 @@ export function ProductDetail({ slug }: { slug: string }) {
     <div className="mx-auto max-w-7xl px-4 py-6">
       {/* Breadcrumb */}
       <nav className="mb-6 flex items-center gap-1 text-sm text-muted-foreground">
-        <Link href="/" className="hover:text-primary">
+        <Link href="/" className="hover:text-accent-foreground">
           {t("nav.home")}
         </Link>
         <ChevronRight className="h-4 w-4" />
@@ -31,7 +31,7 @@ export function ProductDetail({ slug }: { slug: string }) {
           <>
             <Link
               href={`/category/${category.slug}`}
-              className="hover:text-primary"
+              className="hover:text-accent-foreground"
             >
               {tl(category.name)}
             </Link>
@@ -45,10 +45,11 @@ export function ProductDetail({ slug }: { slug: string }) {
         {/* Gallery */}
         <div className="md:sticky md:top-24 md:self-start">
           <ProductImage
-            emoji={product.emoji ?? category?.emoji ?? "🛍️"}
-            gradient={category?.gradient ?? "from-stone-100 to-stone-200"}
+            src={product.image}
+            alt={tl(product.name)}
             className="aspect-square w-full rounded-3xl"
-            emojiClassName="text-[8rem]"
+            sizes="(min-width: 768px) 50vw, 100vw"
+            priority
           />
         </div>
 
@@ -57,12 +58,12 @@ export function ProductDetail({ slug }: { slug: string }) {
           {category && (
             <Link
               href={`/category/${category.slug}`}
-              className="text-sm font-medium text-primary hover:underline"
+              className="text-sm font-medium text-accent-foreground hover:underline"
             >
               {tl(category.name)}
             </Link>
           )}
-          <h1 className="mt-1 text-2xl font-bold sm:text-3xl">
+          <h1 className="font-heading mt-1 text-2xl font-semibold sm:text-3xl">
             {tl(product.name)}
           </h1>
 

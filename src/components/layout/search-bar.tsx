@@ -4,7 +4,6 @@ import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Search } from "lucide-react";
 import { searchProducts } from "@/lib/products";
-import { getCategoryBySlug } from "@/lib/categories";
 import { useLanguage } from "@/i18n/language-context";
 import { formatPrice } from "@/lib/format";
 import { ProductImage } from "@/components/product/product-image";
@@ -46,7 +45,7 @@ export function SearchBar({ className }: { className?: string }) {
             blurTimer.current = setTimeout(() => setFocused(false), 150);
           }}
           placeholder={t("search.placeholder")}
-          className="h-10 w-full rounded-full border bg-muted/50 pl-9 pr-4 text-sm outline-none transition focus:border-primary focus:bg-background"
+          className="h-10 w-full rounded-full border bg-muted/50 pl-9 pr-4 text-sm outline-none transition focus:border-brand focus:bg-background"
         />
       </form>
 
@@ -63,31 +62,28 @@ export function SearchBar({ className }: { className?: string }) {
             </p>
           ) : (
             <ul className="max-h-80 overflow-auto py-1">
-              {results.map((p) => {
-                const category = getCategoryBySlug(p.categorySlug);
-                return (
-                  <li key={p.id}>
-                    <button
-                      type="button"
-                      onClick={() => go(p.slug)}
-                      className="flex w-full items-center gap-3 px-3 py-2 text-left transition hover:bg-accent"
-                    >
-                      <ProductImage
-                        emoji={p.emoji ?? category?.emoji ?? "🛍️"}
-                        gradient={category?.gradient ?? "from-stone-100 to-stone-200"}
-                        className="h-10 w-10 shrink-0 rounded-lg"
-                        emojiClassName="text-lg"
-                      />
-                      <span className="flex-1 truncate text-sm font-medium">
-                        {tl(p.name)}
-                      </span>
-                      <span className="text-sm font-semibold text-primary">
-                        {formatPrice(p.price, lang)}
-                      </span>
-                    </button>
-                  </li>
-                );
-              })}
+              {results.map((p) => (
+                <li key={p.id}>
+                  <button
+                    type="button"
+                    onClick={() => go(p.slug)}
+                    className="flex w-full items-center gap-3 px-3 py-2 text-left transition hover:bg-accent"
+                  >
+                    <ProductImage
+                      src={p.image}
+                      alt={tl(p.name)}
+                      className="h-10 w-10 shrink-0 rounded-lg"
+                      sizes="40px"
+                    />
+                    <span className="flex-1 truncate text-sm font-medium">
+                      {tl(p.name)}
+                    </span>
+                    <span className="text-sm font-semibold text-primary">
+                      {formatPrice(p.price, lang)}
+                    </span>
+                  </button>
+                </li>
+              ))}
             </ul>
           )}
         </div>

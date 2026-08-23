@@ -11,7 +11,7 @@ export const dictionaries = {
 
     "announce.text": "🚚 Free home delivery on orders over ৳1000 — Cash on delivery available!",
 
-    "search.placeholder": "Search for honey, ghee, dates…",
+    "search.placeholder": "Search for shirts, jeans, coats…",
     "search.empty": "No products found.",
 
     "cart.title": "Your Cart",
@@ -34,26 +34,26 @@ export const dictionaries = {
     "product.outOf": "out of 5",
     "product.reviews": "reviews",
     "product.quantity": "Quantity",
-    "product.weight": "Weight / Size",
+    "product.size": "Size",
     "product.description": "Description",
     "product.related": "You may also like",
     "product.save": "Save",
 
-    "home.hero.title": "Pure & Organic Food,\nDelivered to Your Door",
+    "home.hero.title": "Everyday Fashion,\nDelivered to Your Door",
     "home.hero.subtitle":
-      "Authentic honey, ghee, mustard oil, dates and more — sourced directly, with no adulteration.",
+      "Coats, shirts, t-shirts and jeans crafted for comfort — sourced directly, styled for everyday life.",
     "home.hero.cta": "Shop now",
     "home.hero.cta2": "Explore categories",
     "home.categories.title": "Shop by Category",
     "home.featured.title": "Best Sellers",
-    "home.featured.subtitle": "Loved by thousands of families",
-    "home.new.title": "Fresh Arrivals",
+    "home.featured.subtitle": "Loved by thousands of customers",
+    "home.new.title": "New Arrivals",
     "home.viewAll": "View all",
 
     "feature.delivery.title": "Free Delivery",
     "feature.delivery.desc": "On orders over ৳1000",
     "feature.authentic.title": "100% Authentic",
-    "feature.authentic.desc": "No adulteration, ever",
+    "feature.authentic.desc": "Genuine quality, always",
     "feature.cod.title": "Cash on Delivery",
     "feature.cod.desc": "Pay when you receive",
 
@@ -71,9 +71,9 @@ export const dictionaries = {
     "badge.new": "New",
     "badge.organic": "Organic",
 
-    "footer.about.title": "Tiffani & Blue",
+    "footer.about.title": "emart",
     "footer.about.desc":
-      "Bringing exquisite fine and fashion jewellery from trusted craftspeople straight to your home.",
+      "Everyday fashion — coats, shirts, t-shirts and jeans — designed for comfort and delivered straight to your door.",
     "footer.shop": "Shop",
     "footer.help": "Help",
     "footer.help.faq": "FAQ",
@@ -97,7 +97,7 @@ export const dictionaries = {
 
     "announce.text": "🚚 ১০০০৳ এর বেশি অর্ডারে ফ্রি হোম ডেলিভারি — ক্যাশ অন ডেলিভারি সুবিধা!",
 
-    "search.placeholder": "মধু, ঘি, খেজুর খুঁজুন…",
+    "search.placeholder": "শার্ট, জিন্স, কোট খুঁজুন…",
     "search.empty": "কোনো পণ্য পাওয়া যায়নি।",
 
     "cart.title": "আপনার কার্ট",
@@ -120,26 +120,26 @@ export const dictionaries = {
     "product.outOf": "এর মধ্যে ৫",
     "product.reviews": "রিভিউ",
     "product.quantity": "পরিমাণ",
-    "product.weight": "ওজন / সাইজ",
+    "product.size": "সাইজ",
     "product.description": "বিবরণ",
     "product.related": "এগুলোও পছন্দ হতে পারে",
     "product.save": "সাশ্রয়",
 
-    "home.hero.title": "খাঁটি ও অর্গানিক খাবার,\nআপনার দরজায়",
+    "home.hero.title": "প্রতিদিনের ফ্যাশন,\nআপনার দরজায়",
     "home.hero.subtitle":
-      "খাঁটি মধু, ঘি, সরিষার তেল, খেজুরসহ আরও অনেক কিছু — সরাসরি সংগৃহীত, ভেজালমুক্ত।",
+      "কোট, শার্ট, টি-শার্ট ও জিন্স — আরামের কথা মাথায় রেখে তৈরি, সরাসরি সংগৃহীত ও স্টাইলিশ।",
     "home.hero.cta": "এখনই কিনুন",
     "home.hero.cta2": "ক্যাটাগরি দেখুন",
     "home.categories.title": "ক্যাটাগরি অনুযায়ী কিনুন",
     "home.featured.title": "বেস্ট সেলার",
-    "home.featured.subtitle": "হাজারো পরিবারের পছন্দ",
+    "home.featured.subtitle": "হাজারো ক্রেতার পছন্দ",
     "home.new.title": "নতুন পণ্য",
     "home.viewAll": "সব দেখুন",
 
     "feature.delivery.title": "ফ্রি ডেলিভারি",
     "feature.delivery.desc": "১০০০৳ এর বেশি অর্ডারে",
     "feature.authentic.title": "১০০% খাঁটি",
-    "feature.authentic.desc": "কোনো ভেজাল নেই",
+    "feature.authentic.desc": "সবসময় নির্ভরযোগ্য মান",
     "feature.cod.title": "ক্যাশ অন ডেলিভারি",
     "feature.cod.desc": "পণ্য পেয়ে টাকা দিন",
 
@@ -157,8 +157,8 @@ export const dictionaries = {
     "badge.new": "নতুন",
     "badge.organic": "অর্গানিক",
 
-    "footer.about.title": "টিফানি অ্যান্ড ব্লু",
-    "footer.about.desc": "বিশ্বস্ত কারিগরদের কাছ থেকে অসাধারণ ফাইন ও ফ্যাশন গয়না সরাসরি আপনার ঘরে পৌঁছে দিচ্ছি।",
+    "footer.about.title": "emart",
+    "footer.about.desc": "প্রতিদিনের ফ্যাশন — কোট, শার্ট, টি-শার্ট ও জিন্স — আরামের কথা মাথায় রেখে তৈরি, সরাসরি আপনার দরজায় পৌঁছে দিচ্ছি।",
     "footer.shop": "শপ",
     "footer.help": "সহায়তা",
     "footer.help.faq": "প্রশ্নোত্তর",

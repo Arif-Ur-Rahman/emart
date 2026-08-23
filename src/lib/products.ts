@@ -1,9 +1,9 @@
-import type { Product, WeightOption } from "./types";
+import type { Product, SizeOption } from "./types";
 
-/** Convenience helpers for building bilingual weight options. */
-function weights(
+/** Convenience helper for building bilingual size options. */
+function sizes(
   opts: { id: string; en: string; bn: string; price: number; originalPrice?: number }[]
-): WeightOption[] {
+): SizeOption[] {
   return opts.map((o) => ({
     id: o.id,
     label: { en: o.en, bn: o.bn },
@@ -12,349 +12,158 @@ function weights(
   }));
 }
 
+function apparelSizes(price: number, originalPrice?: number): SizeOption[] {
+  return sizes([
+    { id: "s", en: "S", bn: "এস", price, originalPrice },
+    { id: "m", en: "M", bn: "এম", price, originalPrice },
+    { id: "l", en: "L", bn: "এল", price, originalPrice },
+    { id: "xl", en: "XL", bn: "এক্সএল", price, originalPrice },
+  ]);
+}
+
+function jeansSizes(price: number, originalPrice?: number): SizeOption[] {
+  return sizes([
+    { id: "w30", en: "30", bn: "৩০", price, originalPrice },
+    { id: "w32", en: "32", bn: "৩২", price, originalPrice },
+    { id: "w34", en: "34", bn: "৩৪", price, originalPrice },
+    { id: "w36", en: "36", bn: "৩৬", price, originalPrice },
+  ]);
+}
+
 export const products: Product[] = [
-  // ---------------- Honey ----------------
+  // ---------------- Coats ----------------
   {
-    id: "honey-sundarban",
-    slug: "sundarban-natural-honey",
-    name: { en: "Sundarban Natural Honey", bn: "সুন্দরবনের প্রাকৃতিক মধু" },
+    id: "coat-black-classic",
+    slug: "classic-black-coat",
+    name: { en: "Classic Black Overcoat", bn: "ক্লাসিক কালো কোট" },
     shortDesc: {
-      en: "Wild-harvested from the mangrove forest.",
-      bn: "ম্যানগ্রোভ বন থেকে সংগৃহীত খাঁটি মধু।",
+      en: "Tailored black coat for a sharp look.",
+      bn: "স্মার্ট লুকের জন্য টেইলর্ড কালো কোট।",
     },
     description: {
-      en: "100% raw, unprocessed honey collected by traditional honey hunters of the Sundarban. No added sugar, no heating — just pure floral honey with a rich aroma.",
-      bn: "সুন্দরবনের মৌয়ালদের সংগৃহীত ১০০% খাঁটি ও প্রক্রিয়াবিহীন মধু। কোনো চিনি বা তাপ ছাড়াই — সম্পূর্ণ প্রাকৃতিক সুগন্ধযুক্ত মধু।",
+      en: "A tailored black overcoat with clean lines and a modern slim fit. Layer it over a shirt for the office or wear it open for evenings out.",
+      bn: "পরিচ্ছন্ন কাটিং ও আধুনিক স্লিম ফিটের টেইলর্ড কালো কোট। অফিসের জন্য শার্টের ওপর অথবা সন্ধ্যায় খোলা রেখে পরুন।",
     },
-    price: 850,
-    originalPrice: 1000,
-    categorySlug: "honey",
-    rating: 4.8,
-    reviewCount: 214,
-    badges: ["bestseller", "organic"],
-    featured: true,
-    weightOptions: weights([
-      { id: "500g", en: "500 g", bn: "৫০০ গ্রাম", price: 850, originalPrice: 1000 },
-      { id: "1kg", en: "1 kg", bn: "১ কেজি", price: 1600, originalPrice: 1900 },
-    ]),
-  },
-  {
-    id: "honey-mustard",
-    slug: "mustard-flower-honey",
-    name: { en: "Mustard Flower Honey", bn: "সরিষা ফুলের মধু" },
-    shortDesc: { en: "Light, smooth & mild.", bn: "হালকা ও মসৃণ স্বাদের মধু।" },
-    description: {
-      en: "Collected from mustard flower fields, this light golden honey crystallizes naturally and has a gentle, buttery sweetness.",
-      bn: "সরিষা ক্ষেত থেকে সংগৃহীত হালকা সোনালি মধু, প্রাকৃতিকভাবে জমে যায় এবং মৃদু মিষ্টি স্বাদের।",
-    },
-    price: 650,
-    originalPrice: 750,
-    categorySlug: "honey",
-    rating: 4.6,
-    reviewCount: 98,
-    badges: ["organic"],
-    featured: true,
-    weightOptions: weights([
-      { id: "500g", en: "500 g", bn: "৫০০ গ্রাম", price: 650, originalPrice: 750 },
-      { id: "1kg", en: "1 kg", bn: "১ কেজি", price: 1200, originalPrice: 1400 },
-    ]),
-  },
-  {
-    id: "honey-litchi",
-    slug: "litchi-flower-honey",
-    name: { en: "Litchi Flower Honey", bn: "লিচু ফুলের মধু" },
-    shortDesc: { en: "Fragrant seasonal honey.", bn: "সুগন্ধি মৌসুমি মধু।" },
-    description: {
-      en: "A seasonal favourite with a distinct litchi-blossom fragrance and a clean, sweet finish.",
-      bn: "লিচু ফুলের আলাদা সুগন্ধযুক্ত মৌসুমি মধু, মিষ্টি ও পরিচ্ছন্ন স্বাদ।",
-    },
-    price: 700,
-    categorySlug: "honey",
+    price: 4500,
+    originalPrice: 5200,
+    categorySlug: "coats",
+    image: "/cloths/coats/black-coat.png",
     rating: 4.7,
-    reviewCount: 76,
-  },
-
-  // ---------------- Ghee ----------------
-  {
-    id: "ghee-cow",
-    slug: "pure-cow-ghee",
-    name: { en: "Pure Cow Ghee", bn: "খাঁটি গরুর ঘি" },
-    shortDesc: {
-      en: "Hand-made from full-cream milk.",
-      bn: "সম্পূর্ণ দুধের সর থেকে তৈরি।",
-    },
-    description: {
-      en: "Traditionally made desi cow ghee, slow-cooked from pure cream. Rich aroma, golden grain and absolutely no preservatives.",
-      bn: "ঐতিহ্যবাহী পদ্ধতিতে দেশি গরুর দুধের সর থেকে ধীরে রান্না করা ঘি। সুগন্ধি, সোনালি দানা এবং কোনো প্রিজারভেটিভ নেই।",
-    },
-    price: 1150,
-    originalPrice: 1300,
-    categorySlug: "ghee",
-    rating: 4.9,
-    reviewCount: 342,
-    badges: ["bestseller", "organic"],
-    featured: true,
-    weightOptions: weights([
-      { id: "500g", en: "500 g", bn: "৫০০ গ্রাম", price: 1150, originalPrice: 1300 },
-      { id: "1kg", en: "1 kg", bn: "১ কেজি", price: 2200, originalPrice: 2500 },
-    ]),
-  },
-  {
-    id: "ghee-buffalo",
-    slug: "buffalo-milk-ghee",
-    name: { en: "Buffalo Milk Ghee", bn: "মহিষের দুধের ঘি" },
-    shortDesc: { en: "Extra rich & creamy.", bn: "অতিরিক্ত ক্রিমি ও সমৃদ্ধ।" },
-    description: {
-      en: "Made from pure buffalo milk for a creamier texture and deeper flavour — perfect for festive cooking.",
-      bn: "খাঁটি মহিষের দুধ থেকে তৈরি, ক্রিমি টেক্সচার ও গভীর স্বাদ — উৎসবের রান্নার জন্য আদর্শ।",
-    },
-    price: 1300,
-    categorySlug: "ghee",
-    rating: 4.7,
-    reviewCount: 121,
-  },
-
-  // ---------------- Mustard Oil ----------------
-  {
-    id: "oil-mustard",
-    slug: "cold-pressed-mustard-oil",
-    name: { en: "Cold-Pressed Mustard Oil", bn: "ঘানি ভাঙা সরিষার তেল" },
-    shortDesc: { en: "Wood-pressed, pungent & pure.", bn: "ঘানিতে ভাঙা খাঁটি ঝাঁঝালো তেল।" },
-    description: {
-      en: "Traditional ghani (wood-pressed) mustard oil with the natural pungency and aroma that comes only from cold pressing.",
-      bn: "ঐতিহ্যবাহী কাঠের ঘানিতে ভাঙা সরিষার তেল, প্রাকৃতিক ঝাঁঝ ও সুগন্ধ সম্পন্ন।",
-    },
-    price: 420,
-    originalPrice: 500,
-    categorySlug: "mustard-oil",
-    rating: 4.8,
-    reviewCount: 287,
-    badges: ["bestseller", "organic"],
-    featured: true,
-    weightOptions: weights([
-      { id: "1l", en: "1 litre", bn: "১ লিটার", price: 420, originalPrice: 500 },
-      { id: "2l", en: "2 litre", bn: "২ লিটার", price: 800, originalPrice: 950 },
-      { id: "5l", en: "5 litre", bn: "৫ লিটার", price: 1950, originalPrice: 2300 },
-    ]),
-  },
-
-  // ---------------- Dates ----------------
-  {
-    id: "dates-ajwa",
-    slug: "ajwa-dates",
-    name: { en: "Ajwa Dates", bn: "আজওয়া খেজুর" },
-    shortDesc: { en: "Soft Madinah dates.", bn: "মদিনার নরম খেজুর।" },
-    description: {
-      en: "Premium soft Ajwa dates from Madinah — rich, mildly sweet and packed with nutrients.",
-      bn: "মদিনার প্রিমিয়াম নরম আজওয়া খেজুর — সুস্বাদু, মৃদু মিষ্টি ও পুষ্টিকর।",
-    },
-    price: 980,
-    originalPrice: 1150,
-    categorySlug: "dates",
-    rating: 4.9,
-    reviewCount: 156,
+    reviewCount: 58,
     badges: ["bestseller"],
     featured: true,
-    weightOptions: weights([
-      { id: "500g", en: "500 g", bn: "৫০০ গ্রাম", price: 980, originalPrice: 1150 },
-      { id: "1kg", en: "1 kg", bn: "১ কেজি", price: 1850, originalPrice: 2200 },
-    ]),
+    sizeOptions: apparelSizes(4500, 5200),
   },
+
+  // ---------------- Shirts ----------------
   {
-    id: "dates-medjool",
-    slug: "medjool-dates",
-    name: { en: "Medjool Dates", bn: "মেডজুল খেজুর" },
-    shortDesc: { en: "Large & caramel-sweet.", bn: "বড় ও ক্যারামেল মিষ্টি।" },
-    description: {
-      en: "Jumbo Medjool dates with a soft, fudgy texture and natural caramel sweetness.",
-      bn: "বড় আকারের মেডজুল খেজুর, নরম টেক্সচার ও প্রাকৃতিক ক্যারামেল মিষ্টতা।",
+    id: "shirt-formal-classic",
+    slug: "classic-formal-shirt",
+    name: { en: "Classic Formal Shirt", bn: "ক্লাসিক ফরমাল শার্ট" },
+    shortDesc: {
+      en: "Crisp cotton shirt for office & events.",
+      bn: "অফিস ও অনুষ্ঠানের জন্য পরিপাটি সুতির শার্ট।",
     },
-    price: 1100,
-    categorySlug: "dates",
-    rating: 4.8,
-    reviewCount: 89,
+    description: {
+      en: "A crisp, breathable cotton shirt with a clean point collar — built for long office days and dressy evenings alike.",
+      bn: "পরিপাটি ও আরামদায়ক সুতির শার্ট, পরিষ্কার কলার ডিজাইন — অফিসের দীর্ঘ দিন এবং অনুষ্ঠানের জন্য উপযুক্ত।",
+    },
+    price: 1200,
+    originalPrice: 1450,
+    categorySlug: "shirts",
+    image: "/cloths/shirts/formal-shairts.jpg",
+    rating: 4.5,
+    reviewCount: 34,
     badges: ["new"],
-  },
-  {
-    id: "dates-mariam",
-    slug: "mariam-dates",
-    name: { en: "Mariam Dates", bn: "মরিয়ম খেজুর" },
-    shortDesc: { en: "Chewy & wholesome.", bn: "চিবানো ও পুষ্টিকর।" },
-    description: {
-      en: "Popular everyday Mariam dates — chewy, sweet and great with milk.",
-      bn: "জনপ্রিয় মরিয়ম খেজুর — চিবানো, মিষ্টি এবং দুধের সাথে দারুণ।",
-    },
-    price: 720,
-    categorySlug: "dates",
-    rating: 4.6,
-    reviewCount: 64,
+    featured: true,
+    sizeOptions: apparelSizes(1200, 1450),
   },
 
-  // ---------------- Nuts & Seeds ----------------
+  // ---------------- T-Shirts ----------------
   {
-    id: "nuts-almond",
-    slug: "premium-almonds",
-    name: { en: "Premium Almonds", bn: "প্রিমিয়াম কাঠবাদাম" },
-    shortDesc: { en: "Crunchy California almonds.", bn: "মুচমুচে ক্যালিফোর্নিয়া বাদাম।" },
-    description: {
-      en: "Whole California almonds — a crunchy, protein-rich snack loaded with healthy fats.",
-      bn: "সম্পূর্ণ ক্যালিফোর্নিয়া কাঠবাদাম — মুচমুচে, প্রোটিন সমৃদ্ধ এবং স্বাস্থ্যকর।",
+    id: "tshirt-black-print",
+    slug: "black-graphic-tee",
+    name: { en: "Black Graphic Tee", bn: "কালো গ্রাফিক টি-শার্ট" },
+    shortDesc: {
+      en: "Soft cotton tee with a bold front print.",
+      bn: "সাহসী প্রিন্টসহ নরম সুতির টি-শার্ট।",
     },
-    price: 760,
-    originalPrice: 850,
-    categorySlug: "nuts-seeds",
-    rating: 4.7,
-    reviewCount: 132,
-    featured: true,
-    weightOptions: weights([
-      { id: "500g", en: "500 g", bn: "৫০০ গ্রাম", price: 760, originalPrice: 850 },
-      { id: "1kg", en: "1 kg", bn: "১ কেজি", price: 1450, originalPrice: 1650 },
-    ]),
-  },
-  {
-    id: "nuts-cashew",
-    slug: "roasted-cashew-nuts",
-    name: { en: "Roasted Cashew Nuts", bn: "রোস্টেড কাজু বাদাম" },
-    shortDesc: { en: "Lightly salted & roasted.", bn: "হালকা লবণে রোস্ট করা।" },
     description: {
-      en: "Whole cashews roasted to a golden crunch with a touch of salt — perfect for snacking.",
-      bn: "সোনালি করে রোস্ট করা কাজু বাদাম, সামান্য লবণসহ — স্ন্যাকসের জন্য আদর্শ।",
+      en: "A soft, breathable cotton t-shirt with a bold statement print across the chest — an easy everyday layer that pairs with anything.",
+      bn: "নরম ও আরামদায়ক সুতির টি-শার্ট, বুকজুড়ে সাহসী প্রিন্ট — যেকোনো কিছুর সাথে মানানসই নিত্যদিনের পোশাক।",
     },
-    price: 890,
-    categorySlug: "nuts-seeds",
+    price: 550,
+    categorySlug: "tshirts",
+    image: "/cloths/tshirts/tshirt-black.jpg",
     rating: 4.6,
-    reviewCount: 77,
+    reviewCount: 89,
     badges: ["bestseller"],
-  },
-  {
-    id: "seeds-mixed",
-    slug: "mixed-super-seeds",
-    name: { en: "Mixed Super Seeds", bn: "মিক্সড সুপার সিড" },
-    shortDesc: { en: "Chia, flax, pumpkin & more.", bn: "চিয়া, তিসি, কুমড়া বীজ ইত্যাদি।" },
-    description: {
-      en: "A nutritious blend of chia, flax, sunflower and pumpkin seeds — great over yogurt or salads.",
-      bn: "চিয়া, তিসি, সূর্যমুখী ও কুমড়ার বীজের পুষ্টিকর মিশ্রণ — দই বা সালাদে দারুণ।",
-    },
-    price: 540,
-    categorySlug: "nuts-seeds",
-    rating: 4.5,
-    reviewCount: 53,
-    badges: ["new", "organic"],
-  },
-
-  // ---------------- Spices ----------------
-  {
-    id: "spice-turmeric",
-    slug: "organic-turmeric-powder",
-    name: { en: "Organic Turmeric Powder", bn: "অর্গানিক হলুদ গুঁড়া" },
-    shortDesc: { en: "Stone-ground, no additives.", bn: "পাথরে ভাঙা, ভেজালমুক্ত।" },
-    description: {
-      en: "Sun-dried turmeric stone-ground into a vivid, high-curcumin powder with no artificial colour.",
-      bn: "রোদে শুকানো হলুদ পাথরে ভেঙে তৈরি উজ্জ্বল গুঁড়া, কোনো কৃত্রিম রং নেই।",
-    },
-    price: 220,
-    originalPrice: 260,
-    categorySlug: "spices",
-    rating: 4.7,
-    reviewCount: 118,
-    badges: ["organic"],
     featured: true,
+    sizeOptions: apparelSizes(550),
   },
   {
-    id: "spice-chili",
-    slug: "red-chili-powder",
-    name: { en: "Red Chili Powder", bn: "মরিচ গুঁড়া" },
-    shortDesc: { en: "Fiery & pure.", bn: "ঝাল ও খাঁটি।" },
-    description: {
-      en: "Pure red chili powder ground from sun-dried chilies — bold colour and heat with no fillers.",
-      bn: "রোদে শুকানো মরিচ থেকে তৈরি খাঁটি মরিচ গুঁড়া — গাঢ় রং ও ঝাল, কোনো ভেজাল নেই।",
+    id: "tshirt-black-badge",
+    slug: "705-badge-tee",
+    name: { en: "705 Badge Tee", bn: "৭০৫ ব্যাজ টি-শার্ট" },
+    shortDesc: {
+      en: "Minimal black tee with a chest badge logo.",
+      bn: "বুকে ব্যাজ লোগোসহ মিনিমাল কালো টি-শার্ট।",
     },
-    price: 260,
-    categorySlug: "spices",
-    rating: 4.6,
-    reviewCount: 71,
-  },
-  {
-    id: "spice-cumin",
-    slug: "whole-cumin-seeds",
-    name: { en: "Whole Cumin Seeds", bn: "আস্ত জিরা" },
-    shortDesc: { en: "Aromatic & fresh.", bn: "সুগন্ধি ও তাজা।" },
     description: {
-      en: "Hand-picked whole cumin seeds with a strong, earthy aroma — toast and grind for best flavour.",
-      bn: "হাতে বাছাই করা আস্ত জিরা, কড়া সুগন্ধযুক্ত — ভেজে গুঁড়া করলে সেরা স্বাদ।",
+      en: "A minimal black tee finished with a small circular badge logo on the chest — heavyweight cotton that holds its shape wash after wash.",
+      bn: "বুকে ছোট গোলাকার ব্যাজ লোগোসহ মিনিমাল কালো টি-শার্ট — ভারী সুতি কাপড়, বারবার ধোয়ার পরও আকৃতি ঠিক থাকে।",
     },
-    price: 320,
-    categorySlug: "spices",
-    rating: 4.5,
-    reviewCount: 44,
+    price: 520,
+    categorySlug: "tshirts",
+    image: "/cloths/tshirts/tshirt-black2.jpg",
+    rating: 4.4,
+    reviewCount: 41,
+    badges: ["new"],
+    sizeOptions: apparelSizes(520),
   },
 
-  // ---------------- Tea ----------------
+  // ---------------- Jeans ----------------
   {
-    id: "tea-green",
-    slug: "premium-green-tea",
-    name: { en: "Premium Green Tea", bn: "প্রিমিয়াম গ্রিন টি" },
-    shortDesc: { en: "Fresh garden leaves.", bn: "বাগানের তাজা পাতা।" },
-    description: {
-      en: "Whole-leaf green tea from high-altitude gardens — light, refreshing and rich in antioxidants.",
-      bn: "উঁচু বাগানের সম্পূর্ণ পাতার গ্রিন টি — হালকা, সতেজ ও অ্যান্টিঅক্সিডেন্ট সমৃদ্ধ।",
+    id: "jeans-classic-blue",
+    slug: "classic-blue-jeans",
+    name: { en: "Classic Blue Jeans", bn: "ক্লাসিক ব্লু জিন্স" },
+    shortDesc: {
+      en: "Timeless straight-fit denim.",
+      bn: "চিরায়ত স্ট্রেইট ফিট ডেনিম।",
     },
-    price: 380,
-    originalPrice: 450,
-    categorySlug: "tea",
-    rating: 4.6,
-    reviewCount: 92,
-    badges: ["organic"],
-    featured: true,
-  },
-  {
-    id: "tea-masala",
-    slug: "masala-chai-blend",
-    name: { en: "Masala Chai Blend", bn: "মসলা চা ব্লেন্ড" },
-    shortDesc: { en: "Spiced black tea.", bn: "মসলাযুক্ত কালো চা।" },
     description: {
-      en: "Robust black tea blended with cardamom, cinnamon, ginger and clove for the perfect cup of masala chai.",
-      bn: "এলাচ, দারুচিনি, আদা ও লবঙ্গ মিশ্রিত কড়া কালো চা — নিখুঁত মসলা চায়ের জন্য।",
+      en: "Timeless straight-fit denim in a mid-wash blue, cut from sturdy cotton twill with just enough stretch for all-day comfort.",
+      bn: "মিড-ওয়াশ নীল রঙের চিরায়ত স্ট্রেইট ফিট ডেনিম, টেকসই সুতি টুইল কাপড়ে তৈরি, সারাদিনের আরামের জন্য পর্যাপ্ত স্ট্রেচসহ।",
     },
-    price: 340,
-    categorySlug: "tea",
-    rating: 4.7,
-    reviewCount: 68,
-    badges: ["bestseller"],
-  },
-
-  // ---------------- Others ----------------
-  {
-    id: "other-mustard-paste",
-    slug: "kalo-jira-black-seed",
-    name: { en: "Black Seed (Kalo Jira)", bn: "কালোজিরা" },
-    shortDesc: { en: "The seed of blessings.", bn: "সকল রোগের মহৌষধ।" },
-    description: {
-      en: "Whole black cumin (nigella) seeds — use in pickles, tempering, or grind for daily wellness.",
-      bn: "আস্ত কালোজিরা — আচার, ফোড়ন বা গুঁড়া করে প্রতিদিনের স্বাস্থ্যের জন্য।",
-    },
-    price: 290,
-    categorySlug: "others",
-    rating: 4.6,
-    reviewCount: 59,
-    badges: ["organic"],
-  },
-  {
-    id: "other-date-molasses",
-    slug: "khejur-gur-date-molasses",
-    name: { en: "Date Molasses (Khejur Gur)", bn: "খেজুরের গুড়" },
-    shortDesc: { en: "Winter's golden treat.", bn: "শীতের খাঁটি নলেন গুড়।" },
-    description: {
-      en: "Authentic winter date-palm molasses (nolen gur) — naturally sweet with a smoky caramel note.",
-      bn: "শীতের খাঁটি নলেন গুড় — প্রাকৃতিক মিষ্টি ও ধোঁয়াটে ক্যারামেল স্বাদ।",
-    },
-    price: 360,
-    originalPrice: 420,
-    categorySlug: "others",
+    price: 1800,
+    originalPrice: 2100,
+    categorySlug: "jeans",
+    image: "/cloths/jeans/tuananh-blue-9yoXrG6Er_g-unsplash.jpg",
     rating: 4.8,
-    reviewCount: 103,
+    reviewCount: 120,
     badges: ["bestseller"],
     featured: true,
+    sizeOptions: jeansSizes(1800, 2100),
+  },
+  {
+    id: "jeans-slim-blue",
+    slug: "slim-fit-blue-jeans",
+    name: { en: "Slim Fit Blue Jeans", bn: "স্লিম ফিট ব্লু জিন্স" },
+    shortDesc: {
+      en: "Modern slim-fit stretch denim.",
+      bn: "আধুনিক স্লিম ফিট স্ট্রেচ ডেনিম।",
+    },
+    description: {
+      en: "A modern slim-fit jean with a touch of stretch for movement — tapered through the leg with a clean, versatile wash.",
+      bn: "আধুনিক স্লিম ফিট জিন্স, সামান্য স্ট্রেচসহ — পায়ের দিকে টেপার্ড কাট এবং পরিষ্কার, সবকিছুর সাথে মানানসই ওয়াশ।",
+    },
+    price: 1950,
+    categorySlug: "jeans",
+    image: "/cloths/jeans/tuananh-blue-UinXCaBz44A-unsplash.jpg",
+    rating: 4.6,
+    reviewCount: 76,
+    badges: ["new"],
+    sizeOptions: jeansSizes(1950),
   },
 ];
 

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Leaf, Send, MessageCircle, Globe, Phone, Mail } from "lucide-react";
+import { Shirt, Send, MessageCircle, Globe, Phone, Mail } from "lucide-react";
 import { useLanguage } from "@/i18n/language-context";
 import { getAllCategories } from "@/lib/categories";
 
@@ -16,9 +16,9 @@ export function Footer() {
         <div>
           <div className="flex items-center gap-2">
             <span className="flex h-9 w-9 items-center justify-center rounded-full bg-primary text-primary-foreground">
-              <Leaf className="h-5 w-5" />
+              <Shirt className="h-5 w-5" />
             </span>
-            <span className="text-lg font-bold">{t("footer.about.title")}</span>
+            <span className="font-heading text-lg font-semibold">{t("footer.about.title")}</span>
           </div>
           <p className="mt-3 max-w-xs text-sm text-muted-foreground">
             {t("footer.about.desc")}
@@ -29,7 +29,7 @@ export function Footer() {
                 key={i}
                 href="#"
                 aria-label="social link"
-                className="flex h-9 w-9 items-center justify-center rounded-full border text-muted-foreground transition hover:bg-primary hover:text-primary-foreground"
+                className="flex h-9 w-9 items-center justify-center rounded-full border text-muted-foreground transition hover:bg-brand hover:text-brand-foreground"
               >
                 <Icon className="h-4 w-4" />
               </a>
@@ -44,7 +44,7 @@ export function Footer() {
               <li key={c.slug}>
                 <Link
                   href={`/category/${c.slug}`}
-                  className="transition hover:text-primary"
+                  className="transition hover:text-accent-foreground"
                 >
                   {tl(c.name)}
                 </Link>
@@ -57,17 +57,17 @@ export function Footer() {
           <h3 className="mb-3 text-sm font-semibold">{t("footer.help")}</h3>
           <ul className="space-y-2 text-sm text-muted-foreground">
             <li>
-              <Link href="/shop" className="transition hover:text-primary">
+              <Link href="/shop" className="transition hover:text-accent-foreground">
                 {t("footer.help.faq")}
               </Link>
             </li>
             <li>
-              <Link href="/shop" className="transition hover:text-primary">
+              <Link href="/shop" className="transition hover:text-accent-foreground">
                 {t("footer.help.shipping")}
               </Link>
             </li>
             <li>
-              <Link href="/cart" className="transition hover:text-primary">
+              <Link href="/cart" className="transition hover:text-accent-foreground">
                 {t("footer.help.track")}
               </Link>
             </li>
@@ -81,7 +81,7 @@ export function Footer() {
               <Phone className="h-4 w-4" /> +880 1700-000000
             </li>
             <li className="flex items-center gap-2">
-              <Mail className="h-4 w-4" /> hello@tiffaniandblue.demo
+              <Mail className="h-4 w-4" /> hello@emart.demo
             </li>
           </ul>
         </div>

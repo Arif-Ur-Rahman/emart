@@ -1,13 +1,25 @@
 import type { Metadata } from "next";
-import { Inter, Geist_Mono, Hind_Siliguri } from "next/font/google";
+import {
+  Plus_Jakarta_Sans,
+  Fraunces,
+  Geist_Mono,
+  Noto_Sans_Bengali,
+  Noto_Serif_Bengali,
+} from "next/font/google";
 import "./globals.css";
 import { Providers } from "@/components/providers";
 import { AnnouncementBar } from "@/components/layout/announcement-bar";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 
-const sans = Inter({
+const sans = Plus_Jakarta_Sans({
   variable: "--font-sans",
+  subsets: ["latin"],
+});
+
+const heading = Fraunces({
+  variable: "--font-heading",
+  weight: ["500", "600", "700"],
   subsets: ["latin"],
 });
 
@@ -16,16 +28,22 @@ const mono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const bangla = Hind_Siliguri({
+const bangla = Noto_Sans_Bengali({
   variable: "--font-bangla",
   weight: ["400", "500", "600", "700"],
   subsets: ["bengali"],
 });
 
+const headingBangla = Noto_Serif_Bengali({
+  variable: "--font-heading-bn",
+  weight: ["500", "600", "700"],
+  subsets: ["bengali"],
+});
+
 export const metadata: Metadata = {
-  title: "Tiffani & Blue — Fine & Fashion Jewellery",
+  title: "emart — Everyday Fashion",
   description:
-    "Exquisite fine and fashion jewellery delivered to your door — rings, necklaces, earrings, bracelets and more.",
+    "Coats, shirts, t-shirts and jeans delivered to your door — everyday fashion built for comfort and style.",
 };
 
 export default function RootLayout({
@@ -36,7 +54,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${sans.variable} ${mono.variable} ${bangla.variable} h-full antialiased`}
+      className={`${sans.variable} ${heading.variable} ${mono.variable} ${bangla.variable} ${headingBangla.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-background">
         <Providers>

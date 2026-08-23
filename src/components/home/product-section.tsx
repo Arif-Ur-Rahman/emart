@@ -24,7 +24,7 @@ export function ProductSection({
     <section className="mx-auto max-w-7xl px-4 py-8">
       <div className="mb-5 flex items-end justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold sm:text-3xl">{title}</h2>
+          <h2 className="font-heading text-2xl font-semibold sm:text-3xl">{title}</h2>
           {subtitle && (
             <p className="mt-1 text-sm text-muted-foreground">{subtitle}</p>
           )}
@@ -32,7 +32,7 @@ export function ProductSection({
         {viewAllHref && (
           <Link
             href={viewAllHref}
-            className="flex shrink-0 items-center gap-1 text-sm font-semibold text-primary hover:underline"
+            className="flex shrink-0 items-center gap-1 text-sm font-semibold text-accent-foreground hover:underline"
           >
             {t("home.viewAll")}
             <ArrowRight className="h-4 w-4" />

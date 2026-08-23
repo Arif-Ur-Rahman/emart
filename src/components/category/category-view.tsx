@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import { useLanguage } from "@/i18n/language-context";
 import { getCategoryBySlug } from "@/lib/categories";
@@ -17,12 +18,23 @@ export function CategoryView({ slug }: { slug: string }) {
   return (
     <div className="mx-auto max-w-7xl px-4 py-8">
       <div
-        className={`flex items-center gap-4 rounded-3xl bg-gradient-to-br ${category.gradient} p-6 sm:p-8`}
+        className={`relative h-48 overflow-hidden rounded-3xl bg-gradient-to-br ${category.gradient} sm:h-64`}
       >
-        <span className="text-5xl sm:text-6xl">{category.emoji}</span>
-        <div>
-          <h1 className="text-2xl font-bold sm:text-3xl">{tl(category.name)}</h1>
-          <p className="mt-1 text-sm text-foreground/70">{tl(category.tagline)}</p>
+        <Image
+          src={category.image}
+          alt={tl(category.name)}
+          fill
+          sizes="100vw"
+          priority
+          className="object-cover"
+        />
+        <div className="absolute inset-0 flex items-end bg-gradient-to-t from-black/70 via-black/10 to-transparent p-6 sm:p-8">
+          <div>
+            <h1 className="font-heading text-2xl font-semibold text-white sm:text-3xl">
+              {tl(category.name)}
+            </h1>
+            <p className="mt-1 text-sm text-white/80">{tl(category.tagline)}</p>
+          </div>
         </div>
       </div>
 

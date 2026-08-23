@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { ShoppingCart, Check } from "lucide-react";
-import type { Product, WeightOption } from "@/lib/types";
+import type { Product, SizeOption } from "@/lib/types";
 import { useCart } from "@/context/cart-context";
 import { useLanguage } from "@/i18n/language-context";
 import { formatPrice, discountPercent } from "@/lib/format";
@@ -13,8 +13,8 @@ import { cn } from "@/lib/utils";
 export function ProductPurchase({ product }: { product: Product }) {
   const { t, tl, lang } = useLanguage();
   const { addItem } = useCart();
-  const [variant, setVariant] = useState<WeightOption | undefined>(
-    product.weightOptions?.[0]
+  const [variant, setVariant] = useState<SizeOption | undefined>(
+    product.sizeOptions?.[0]
   );
   const [qty, setQty] = useState(1);
   const [justAdded, setJustAdded] = useState(false);
@@ -41,17 +41,17 @@ export function ProductPurchase({ product }: { product: Product }) {
           </span>
         )}
         {discount !== null && (
-          <span className="rounded-full bg-primary/10 px-2 py-0.5 text-sm font-semibold text-primary">
+          <span className="rounded-full bg-accent px-2 py-0.5 text-sm font-semibold text-accent-foreground">
             {t("product.save")} {discount}%
           </span>
         )}
       </div>
 
-      {product.weightOptions && product.weightOptions.length > 0 && (
+      {product.sizeOptions && product.sizeOptions.length > 0 && (
         <div>
-          <p className="mb-2 text-sm font-medium">{t("product.weight")}</p>
+          <p className="mb-2 text-sm font-medium">{t("product.size")}</p>
           <div className="flex flex-wrap gap-2">
-            {product.weightOptions.map((opt) => (
+            {product.sizeOptions.map((opt) => (
               <button
                 key={opt.id}
                 type="button"
@@ -59,8 +59,8 @@ export function ProductPurchase({ product }: { product: Product }) {
                 className={cn(
                   "rounded-full border px-4 py-2 text-sm font-medium transition",
                   variant?.id === opt.id
-                    ? "border-primary bg-primary text-primary-foreground"
-                    : "hover:border-primary"
+                    ? "border-brand bg-brand text-brand-foreground"
+                    : "hover:border-brand"
                 )}
               >
                 {tl(opt.label)}

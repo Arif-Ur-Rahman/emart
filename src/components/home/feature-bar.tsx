@@ -16,7 +16,7 @@ export function FeatureBar() {
       <div className="mx-auto grid max-w-7xl gap-4 px-4 py-6 sm:grid-cols-3">
         {features.map((f) => (
           <div key={f.title} className="flex items-center gap-3">
-            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-accent text-accent-foreground">
               <f.icon className="h-5 w-5" />
             </span>
             <div>

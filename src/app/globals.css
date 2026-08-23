@@ -10,7 +10,7 @@
   --font-sans: var(--font-sans);
   --font-mono: var(--font-geist-mono);
   --font-bangla: var(--font-bangla);
-  --font-heading: var(--font-sans);
+  --font-heading: var(--font-heading);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -36,9 +36,9 @@
   --color-secondary: var(--secondary);
   --color-primary-foreground: var(--primary-foreground);
   --color-primary: var(--primary);
-  /* Signature brand accent — Tiffany Blue */
-  --color-tiffany: var(--tiffany);
-  --color-tiffany-foreground: var(--tiffany-foreground);
+  /* Signature brand accent — warm terracotta */
+  --color-brand: var(--brand);
+  --color-brand-foreground: var(--brand-foreground);
   --color-popover-foreground: var(--popover-foreground);
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
@@ -53,82 +53,82 @@
 }
 
 :root {
-  /* ~85% neutral — crisp soft-white background, white #FFFFFF cards */
-  --background: oklch(0.99 0.003 200);
-  --foreground: oklch(0.18 0 0); /* black */
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.18 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.18 0 0);
-  /* ~10% — black CTA: lets the jewellery & Tiffany Blue carry the brand */
-  --primary: oklch(0.18 0 0);
-  --primary-foreground: oklch(0.99 0.003 200);
-  --secondary: oklch(0.96 0.004 200);
-  --secondary-foreground: oklch(0.18 0 0);
-  --muted: oklch(0.96 0.004 200);
-  --muted-foreground: oklch(0.47 0.006 200);
-  /* subtle Tiffany Blue tint for hover/highlight surfaces */
-  --accent: oklch(0.94 0.04 192);
-  --accent-foreground: oklch(0.42 0.08 195);
+  /* ~85% neutral — warm cream background, warm-white cards */
+  --background: oklch(0.98 0.008 85);
+  --foreground: oklch(0.19 0.012 50); /* warm charcoal */
+  --card: oklch(0.995 0.006 85);
+  --card-foreground: oklch(0.19 0.012 50);
+  --popover: oklch(0.995 0.006 85);
+  --popover-foreground: oklch(0.19 0.012 50);
+  /* ~10% — charcoal CTA: timeless, lets the terracotta accent carry the brand */
+  --primary: oklch(0.19 0.012 50);
+  --primary-foreground: oklch(0.98 0.008 85);
+  --secondary: oklch(0.95 0.01 80);
+  --secondary-foreground: oklch(0.19 0.012 50);
+  --muted: oklch(0.95 0.01 80);
+  --muted-foreground: oklch(0.48 0.014 55);
+  /* warm terracotta tint for hover/highlight surfaces */
+  --accent: oklch(0.93 0.045 45);
+  --accent-foreground: oklch(0.44 0.11 40);
   --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.91 0.004 200);
-  --input: oklch(0.91 0.004 200);
-  /* ~5% — Tiffany Blue #0ABAB5 as the signature focus/accent cue */
-  --ring: oklch(0.72 0.105 192);
-  /* Signature brand accent */
-  --tiffany: oklch(0.72 0.105 192);
-  --tiffany-foreground: oklch(0.18 0 0);
-  --chart-1: oklch(0.72 0.105 192); /* Tiffany Blue */
-  --chart-2: oklch(0.55 0.09 195); /* deep teal */
-  --chart-3: oklch(0.3 0 0); /* black */
-  --chart-4: oklch(0.85 0.06 190); /* light Tiffany */
-  --chart-5: oklch(0.6 0 0); /* grey */
+  --border: oklch(0.9 0.012 75);
+  --input: oklch(0.9 0.012 75);
+  /* ~5% — terracotta as the signature focus/accent cue */
+  --ring: oklch(0.66 0.14 42);
+  /* Signature brand accent — warm terracotta */
+  --brand: oklch(0.66 0.14 42);
+  --brand-foreground: oklch(0.98 0.008 85);
+  --chart-1: oklch(0.66 0.14 42); /* terracotta */
+  --chart-2: oklch(0.5 0.11 35); /* deep rust */
+  --chart-3: oklch(0.25 0.01 50); /* charcoal */
+  --chart-4: oklch(0.82 0.08 60); /* light amber */
+  --chart-5: oklch(0.6 0.01 60); /* warm grey */
   --radius: 0.625rem;
-  --sidebar: oklch(0.985 0.004 200);
-  --sidebar-foreground: oklch(0.18 0 0);
-  --sidebar-primary: oklch(0.18 0 0);
-  --sidebar-primary-foreground: oklch(0.99 0.003 200);
-  --sidebar-accent: oklch(0.94 0.04 192);
-  --sidebar-accent-foreground: oklch(0.42 0.08 195);
-  --sidebar-border: oklch(0.91 0.004 200);
-  --sidebar-ring: oklch(0.72 0.105 192);
+  --sidebar: oklch(0.97 0.008 85);
+  --sidebar-foreground: oklch(0.19 0.012 50);
+  --sidebar-primary: oklch(0.19 0.012 50);
+  --sidebar-primary-foreground: oklch(0.98 0.008 85);
+  --sidebar-accent: oklch(0.93 0.045 45);
+  --sidebar-accent-foreground: oklch(0.44 0.11 40);
+  --sidebar-border: oklch(0.9 0.012 75);
+  --sidebar-ring: oklch(0.66 0.14 42);
 }
 
 .dark {
-  --background: oklch(0.16 0 0); /* near-black */
-  --foreground: oklch(0.97 0.003 200);
-  --card: oklch(0.21 0.002 200);
-  --card-foreground: oklch(0.97 0.003 200);
-  --popover: oklch(0.21 0.002 200);
-  --popover-foreground: oklch(0.97 0.003 200);
-  /* light CTA mirrors the light-mode black button */
-  --primary: oklch(0.93 0.005 200);
-  --primary-foreground: oklch(0.18 0 0);
-  --secondary: oklch(0.27 0.003 200);
-  --secondary-foreground: oklch(0.97 0.004 200);
-  --muted: oklch(0.27 0.003 200);
-  --muted-foreground: oklch(0.72 0.006 200);
-  --accent: oklch(0.32 0.05 195); /* dim Tiffany Blue tint */
-  --accent-foreground: oklch(0.85 0.07 190);
+  --background: oklch(0.17 0.01 50); /* warm near-black */
+  --foreground: oklch(0.97 0.008 80);
+  --card: oklch(0.22 0.012 55);
+  --card-foreground: oklch(0.97 0.008 80);
+  --popover: oklch(0.22 0.012 55);
+  --popover-foreground: oklch(0.97 0.008 80);
+  /* light CTA mirrors the light-mode charcoal button */
+  --primary: oklch(0.93 0.008 80);
+  --primary-foreground: oklch(0.19 0.012 50);
+  --secondary: oklch(0.28 0.012 55);
+  --secondary-foreground: oklch(0.97 0.008 80);
+  --muted: oklch(0.28 0.012 55);
+  --muted-foreground: oklch(0.73 0.014 65);
+  --accent: oklch(0.34 0.07 42); /* dim terracotta tint */
+  --accent-foreground: oklch(0.85 0.08 55);
   --destructive: oklch(0.704 0.191 22.216);
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.75 0.11 192);
-  --tiffany: oklch(0.75 0.11 192);
-  --tiffany-foreground: oklch(0.16 0 0);
-  --chart-1: oklch(0.75 0.11 192);
-  --chart-2: oklch(0.6 0.09 195);
-  --chart-3: oklch(0.85 0.005 200);
-  --chart-4: oklch(0.82 0.07 190);
-  --chart-5: oklch(0.6 0 0);
-  --sidebar: oklch(0.21 0.003 200);
-  --sidebar-foreground: oklch(0.97 0.004 200);
-  --sidebar-primary: oklch(0.93 0.005 200);
-  --sidebar-primary-foreground: oklch(0.18 0 0);
-  --sidebar-accent: oklch(0.32 0.05 195);
-  --sidebar-accent-foreground: oklch(0.85 0.07 190);
+  --ring: oklch(0.7 0.13 45);
+  --brand: oklch(0.7 0.13 45);
+  --brand-foreground: oklch(0.17 0.01 50);
+  --chart-1: oklch(0.7 0.13 45);
+  --chart-2: oklch(0.58 0.11 38);
+  --chart-3: oklch(0.87 0.008 75);
+  --chart-4: oklch(0.8 0.09 60);
+  --chart-5: oklch(0.62 0.01 60);
+  --sidebar: oklch(0.22 0.012 55);
+  --sidebar-foreground: oklch(0.97 0.008 80);
+  --sidebar-primary: oklch(0.93 0.008 80);
+  --sidebar-primary-foreground: oklch(0.19 0.012 50);
+  --sidebar-accent: oklch(0.34 0.07 42);
+  --sidebar-accent-foreground: oklch(0.85 0.08 55);
   --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.75 0.11 192);
+  --sidebar-ring: oklch(0.7 0.13 45);
 }
 
 @layer base {
@@ -143,6 +143,9 @@
   }
   html[lang="bn"] body {
     font-family: var(--font-bangla), var(--font-sans), sans-serif;
+  }
+  html[lang="bn"] .font-heading {
+    font-family: var(--font-heading-bn), var(--font-bangla), sans-serif;
   }
 }
 

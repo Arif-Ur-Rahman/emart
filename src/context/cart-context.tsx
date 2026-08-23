@@ -8,10 +8,9 @@ import {
   useMemo,
   useState,
 } from "react";
-import type { CartItem, Product, WeightOption } from "@/lib/types";
-import { getCategoryBySlug } from "@/lib/categories";
+import type { CartItem, Product, SizeOption } from "@/lib/types";
 
-const STORAGE_KEY = "gb.cart";
+const STORAGE_KEY = "emart.cart";
 
 type CartContextValue = {
   items: CartItem[];
@@ -19,7 +18,7 @@ type CartContextValue = {
   subtotal: number;
   isOpen: boolean;
   setOpen: (open: boolean) => void;
-  addItem: (product: Product, variant?: WeightOption, quantity?: number) => void;
+  addItem: (product: Product, variant?: SizeOption, quantity?: number) => void;
   updateQty: (key: string, quantity: number) => void;
   removeItem: (key: string) => void;
   clear: () => void;
@@ -54,9 +53,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   }, [items, hydrated]);
 
   const addItem = useCallback(
-    (product: Product, variant?: WeightOption, quantity = 1) => {
+    (product: Product, variant?: SizeOption, quantity = 1) => {
       const key = lineKey(product.id, variant?.id);
-      const category = getCategoryBySlug(product.categorySlug);
       setItems((prev) => {
         const existing = prev.find((i) => i.key === key);
         if (existing) {
@@ -71,8 +69,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
           variantId: variant?.id,
           name: product.name,
           variantLabel: variant?.label,
-          emoji: product.emoji ?? category?.emoji ?? "🛍️",
-          gradient: category?.gradient ?? "from-stone-100 to-stone-200",
+          image: product.image,
           price: variant?.price ?? product.price,
           quantity,
         };

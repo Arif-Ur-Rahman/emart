@@ -1,33 +1,29 @@
+import Image from "next/image";
 import { cn } from "@/lib/utils";
 
-/**
- * Lightweight placeholder "image" — a branded gradient tile with the product's
- * emoji. Avoids shipping real image assets while the catalog is still mock data.
- * Swap this component for next/image once real product photos exist.
- */
 export function ProductImage({
-  emoji,
-  gradient,
+  src,
+  alt,
   className,
-  emojiClassName,
+  sizes,
+  priority,
 }: {
-  emoji: string;
-  gradient: string;
+  src: string;
+  alt: string;
   className?: string;
-  emojiClassName?: string;
+  sizes?: string;
+  priority?: boolean;
 }) {
   return (
-    <div
-      aria-hidden
-      className={cn(
-        "flex items-center justify-center bg-gradient-to-br",
-        gradient,
-        className
-      )}
-    >
-      <span className={cn("select-none drop-shadow-sm", emojiClassName)}>
-        {emoji}
-      </span>
+    <div className={cn("relative overflow-hidden bg-muted", className)}>
+      <Image
+        src={src}
+        alt={alt}
+        fill
+        sizes={sizes ?? "(min-width: 1024px) 25vw, 50vw"}
+        priority={priority}
+        className="object-cover"
+      />
     </div>
   );
 }

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Menu, ShoppingCart, Leaf } from "lucide-react";
+import { Menu, ShoppingCart, Shirt } from "lucide-react";
 import { useLanguage } from "@/i18n/language-context";
 import { useCart } from "@/context/cart-context";
 import { getAllCategories } from "@/lib/categories";
@@ -31,7 +31,7 @@ function CartButton() {
     >
       <ShoppingCart className="h-5 w-5" />
       {count > 0 && (
-        <span className="absolute -right-0.5 -top-0.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1 text-[11px] font-bold text-primary-foreground">
+        <span className="absolute -right-0.5 -top-0.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-brand px-1 text-[11px] font-bold text-brand-foreground">
           {formatNumber(count, lang)}
         </span>
       )}
@@ -44,9 +44,9 @@ function Logo() {
   return (
     <Link href="/" className="flex items-center gap-2">
       <span className="flex h-9 w-9 items-center justify-center rounded-full bg-primary text-primary-foreground">
-        <Leaf className="h-5 w-5" />
+        <Shirt className="h-5 w-5" />
       </span>
-      <span className="text-lg font-bold leading-none tracking-tight">
+      <span className="font-heading text-lg font-semibold leading-none tracking-tight">
         {t("footer.about.title")}
       </span>
     </Link>

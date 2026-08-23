@@ -31,6 +31,9 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const stored = window.localStorage.getItem(STORAGE_KEY);
     if (stored === "en" || stored === "bn") {
+      // Deliberately post-mount: reading localStorage during render would
+      // desync the server-rendered and initial client-rendered output.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setLangState(stored);
     }
   }, []);

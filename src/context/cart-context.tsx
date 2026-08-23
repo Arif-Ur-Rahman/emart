@@ -39,6 +39,9 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     try {
       const raw = window.localStorage.getItem(STORAGE_KEY);
+      // Deliberately post-mount: reading localStorage during render would
+      // desync the server-rendered and initial client-rendered output.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       if (raw) setItems(JSON.parse(raw) as CartItem[]);
     } catch {
       // ignore malformed storage

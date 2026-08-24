@@ -1,19 +1,19 @@
 "use client";
 
+import Link from "next/link";
 import { useCart } from "@/context/cart-context";
 import { useLanguage } from "@/i18n/language-context";
 import { formatPrice } from "@/lib/format";
-import { Button } from "@/components/ui/button";
+import { calculateShipping } from "@/lib/shipping";
+import { buttonVariants } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-
-const FREE_SHIPPING_THRESHOLD = 1000;
-const SHIPPING_FEE = 60;
+import { cn } from "@/lib/utils";
 
 export function CartSummary() {
-  const { subtotal } = useCart();
+  const { subtotal, setOpen } = useCart();
   const { t, lang } = useLanguage();
 
-  const shipping = subtotal >= FREE_SHIPPING_THRESHOLD || subtotal === 0 ? 0 : SHIPPING_FEE;
+  const shipping = calculateShipping(subtotal);
   const total = subtotal + shipping;
 
   return (
@@ -33,12 +33,13 @@ export function CartSummary() {
         <span>{t("cart.total")}</span>
         <span className="text-primary">{formatPrice(total, lang)}</span>
       </div>
-      <Button className="w-full" size="lg" disabled>
+      <Link
+        href="/checkout"
+        onClick={() => setOpen(false)}
+        className={cn(buttonVariants({ size: "lg" }), "w-full")}
+      >
         {t("cart.checkout")}
-      </Button>
-      <p className="text-center text-xs text-muted-foreground">
-        {t("cart.checkout.note")}
-      </p>
+      </Link>
     </div>
   );
 }

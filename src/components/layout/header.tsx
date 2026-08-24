@@ -1,16 +1,17 @@
 "use client";
 
-import { useState } from "react";
+import { startTransition, useState } from "react";
 import Link from "next/link";
-import { Menu, ShoppingCart, Shirt } from "lucide-react";
+import { Menu, ShoppingCart, Shirt, User as UserIcon, LogOut, Package } from "lucide-react";
 import { useLanguage } from "@/i18n/language-context";
 import { useCart } from "@/context/cart-context";
-import { getAllCategories } from "@/lib/categories";
+import type { Category } from "@/lib/types";
 import { formatNumber } from "@/lib/format";
 import { LanguageToggle } from "@/components/language-toggle";
 import { SearchBar } from "./search-bar";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { logout } from "@/lib/actions/auth";
 import {
   Sheet,
   SheetContent,
@@ -18,6 +19,67 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
+type SessionUser = { name?: string | null; email?: string | null } | null;
+
+function AccountMenu({ user }: { user: SessionUser }) {
+  const { t } = useLanguage();
+
+  if (!user) {
+    return (
+      <Link
+        href="/login"
+        aria-label={t("auth.login")}
+        className="flex h-10 w-10 items-center justify-center rounded-full text-foreground transition hover:bg-accent"
+      >
+        <UserIcon className="h-5 w-5" />
+      </Link>
+    );
+  }
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger
+        aria-label={t("auth.myAccount")}
+        className="flex h-10 w-10 items-center justify-center rounded-full text-foreground transition hover:bg-accent"
+      >
+        <UserIcon className="h-5 w-5" />
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        <p className="truncate px-1.5 py-1 text-xs font-medium text-muted-foreground">
+          {user.name ?? user.email}
+        </p>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem render={<Link href="/account/orders" />}>
+          <Package className="h-4 w-4" />
+          {t("auth.myOrders")}
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          variant="destructive"
+          onClick={() => {
+            startTransition(async () => {
+              await logout();
+              // Hard navigation: guarantees every cached route (not just
+              // the current one) re-fetches as logged out.
+              // eslint-disable-next-line @next/next/no-location-assign-relative-destination
+              window.location.href = "/";
+            });
+          }}
+        >
+          <LogOut className="h-4 w-4" />
+          {t("auth.logout")}
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
 
 function CartButton() {
   const { count, setOpen } = useCart();
@@ -53,10 +115,15 @@ function Logo() {
   );
 }
 
-export function Header() {
+export function Header({
+  categories,
+  user,
+}: {
+  categories: Category[];
+  user: SessionUser;
+}) {
   const { t, tl } = useLanguage();
   const [menuOpen, setMenuOpen] = useState(false);
-  const categories = getAllCategories();
 
   const navLinks = [
     { href: "/", label: t("nav.home") },
@@ -131,6 +198,7 @@ export function Header() {
 
         <div className="ml-auto flex items-center gap-1 sm:gap-2 lg:ml-0">
           <LanguageToggle className="hidden sm:inline-flex" />
+          <AccountMenu user={user} />
           <CartButton />
         </div>
       </div>

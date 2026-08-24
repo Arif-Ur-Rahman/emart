@@ -11,6 +11,9 @@ import { Providers } from "@/components/providers";
 import { AnnouncementBar } from "@/components/layout/announcement-bar";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
+import { getAllCategories } from "@/lib/data/categories";
+import { getCart } from "@/lib/data/cart";
+import { auth } from "@/lib/auth";
 
 const sans = Plus_Jakarta_Sans({
   variable: "--font-sans",
@@ -46,22 +49,28 @@ export const metadata: Metadata = {
     "Coats, shirts, t-shirts and jeans delivered to your door — everyday fashion built for comfort and style.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const [categories, session, cartItems] = await Promise.all([
+    getAllCategories(),
+    auth(),
+    getCart(),
+  ]);
+
   return (
     <html
       lang="en"
       className={`${sans.variable} ${heading.variable} ${mono.variable} ${bangla.variable} ${headingBangla.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-background">
-        <Providers>
+        <Providers initialCartItems={cartItems}>
           <AnnouncementBar />
-          <Header />
+          <Header categories={categories} user={session?.user ?? null} />
           <main className="flex-1">{children}</main>
-          <Footer />
+          <Footer categories={categories} />
         </Providers>
       </body>
     </html>

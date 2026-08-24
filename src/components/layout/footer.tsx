@@ -3,11 +3,11 @@
 import Link from "next/link";
 import { Shirt, Send, MessageCircle, Globe, Phone, Mail } from "lucide-react";
 import { useLanguage } from "@/i18n/language-context";
-import { getAllCategories } from "@/lib/categories";
+import type { Category } from "@/lib/types";
 
-export function Footer() {
+export function Footer({ categories: allCategories }: { categories: Category[] }) {
   const { t, tl } = useLanguage();
-  const categories = getAllCategories().slice(0, 6);
+  const categories = allCategories.slice(0, 6);
   const year = new Date().getFullYear();
 
   return (

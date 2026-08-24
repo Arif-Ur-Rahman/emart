@@ -1,23 +1,24 @@
 "use client";
 
 import Link from "next/link";
-import { notFound } from "next/navigation";
 import { Star, ChevronRight } from "lucide-react";
 import { useLanguage } from "@/i18n/language-context";
-import { getProductBySlug, getRelatedProducts } from "@/lib/products";
-import { getCategoryBySlug } from "@/lib/categories";
+import type { Category, Product } from "@/lib/types";
 import { formatNumber } from "@/lib/format";
 import { ProductImage } from "./product-image";
 import { ProductPurchase } from "./product-purchase";
 import { ProductSection } from "@/components/home/product-section";
 
-export function ProductDetail({ slug }: { slug: string }) {
+export function ProductDetail({
+  product,
+  category,
+  related,
+}: {
+  product: Product;
+  category: Category | undefined;
+  related: Product[];
+}) {
   const { t, tl, lang } = useLanguage();
-  const product = getProductBySlug(slug);
-  if (!product) return notFound();
-
-  const category = getCategoryBySlug(product.categorySlug);
-  const related = getRelatedProducts(product);
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-6">

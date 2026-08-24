@@ -1,19 +1,19 @@
 "use client";
 
 import Image from "next/image";
-import { notFound } from "next/navigation";
 import { useLanguage } from "@/i18n/language-context";
-import { getCategoryBySlug } from "@/lib/categories";
-import { getProductsByCategory } from "@/lib/products";
+import type { Category, Product } from "@/lib/types";
 import { formatNumber } from "@/lib/format";
 import { ProductGrid } from "@/components/product/product-grid";
 
-export function CategoryView({ slug }: { slug: string }) {
+export function CategoryView({
+  category,
+  products,
+}: {
+  category: Category;
+  products: Product[];
+}) {
   const { t, tl, lang } = useLanguage();
-  const category = getCategoryBySlug(slug);
-  if (!category) return notFound();
-
-  const products = getProductsByCategory(slug);
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8">

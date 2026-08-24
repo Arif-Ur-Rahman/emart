@@ -4,13 +4,12 @@ import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 import { useLanguage } from "@/i18n/language-context";
-import { getAllCategories } from "@/lib/categories";
+import type { Category } from "@/lib/types";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
-export function Hero() {
+export function Hero({ categories }: { categories: Category[] }) {
   const { t, tl } = useLanguage();
-  const categories = getAllCategories();
   return (
     <section className="relative overflow-hidden bg-gradient-to-br from-accent/40 via-background to-background">
       <div className="mx-auto grid max-w-7xl items-center gap-8 px-4 py-12 md:grid-cols-2 md:py-20">

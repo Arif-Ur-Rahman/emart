@@ -1,9 +1,12 @@
 import type { Metadata } from "next";
-import { getAllCategories, getCategoryBySlug } from "@/lib/categories";
+import { notFound } from "next/navigation";
+import { getAllCategories, getCategoryBySlug } from "@/lib/data/categories";
+import { getProductsByCategory } from "@/lib/data/products";
 import { CategoryView } from "@/components/category/category-view";
 
-export function generateStaticParams() {
-  return getAllCategories().map((c) => ({ slug: c.slug }));
+export async function generateStaticParams() {
+  const categories = await getAllCategories();
+  return categories.map((c) => ({ slug: c.slug }));
 }
 
 export async function generateMetadata({
@@ -12,7 +15,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const category = getCategoryBySlug(slug);
+  const category = await getCategoryBySlug(slug);
   return {
     title: category ? `${category.name.en} — emart` : "emart",
   };
@@ -24,5 +27,10 @@ export default async function CategoryPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  return <CategoryView slug={slug} />;
+  const category = await getCategoryBySlug(slug);
+  if (!category) notFound();
+
+  const products = await getProductsByCategory(slug);
+
+  return <CategoryView category={category} products={products} />;
 }

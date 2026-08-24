@@ -1,0 +1,206 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+// ---------------- Auth.js ----------------
+
+model User {
+  id           String    @id @default(cuid())
+  name         String?
+  email        String?   @unique
+  emailVerified DateTime?
+  image        String?
+  passwordHash String?
+
+  accounts Account[]
+  sessions Session[]
+  cart     Cart?
+  orders   Order[]
+
+  createdAt DateTime @default(now())
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// ---------------- Catalog ----------------
+
+model Category {
+  id       String @id @default(cuid())
+  slug     String @unique
+  name     Json // Localized { en, bn }
+  tagline  Json // Localized { en, bn }
+  emoji    String
+  icon     String
+  gradient String
+  image    String
+
+  products Product[]
+}
+
+model Product {
+  id            String  @id @default(cuid())
+  slug          String  @unique
+  name          Json // Localized { en, bn }
+  shortDesc     Json // Localized { en, bn }
+  description   Json // Localized { en, bn }
+  price         Int
+  originalPrice Int?
+  image         String
+  rating        Float?
+  reviewCount   Int?
+  badges        Json? // ProductBadge[]
+  featured      Boolean @default(false)
+
+  categoryId String
+  category   Category @relation(fields: [categoryId], references: [id])
+
+  sizeOptions SizeOption[]
+  cartItems   CartItem[]
+  orderItems  OrderItem[]
+}
+
+model SizeOption {
+  id            String @id @default(cuid())
+  sizeId        String // e.g. "s", "m", "w32" — matches the product's option list
+  label         Json // Localized { en, bn }
+  price         Int
+  originalPrice Int?
+
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  cartItems  CartItem[]
+  orderItems OrderItem[]
+
+  @@unique([productId, sizeId])
+}
+
+// ---------------- Cart ----------------
+
+model Cart {
+  id     String  @id @default(cuid())
+  userId String? @unique
+
+  user  User?      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items CartItem[]
+
+  createdAt DateTime @updatedAt
+}
+
+model CartItem {
+  id       String @id @default(cuid())
+  quantity Int
+  // Snapshotted at add-to-cart time so a later catalog price change doesn't
+  // silently reprice items already sitting in someone's cart.
+  price    Int
+
+  cartId String
+  cart   Cart   @relation(fields: [cartId], references: [id], onDelete: Cascade)
+
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  variantId String?
+  variant   SizeOption? @relation(fields: [variantId], references: [id], onDelete: Cascade)
+
+  @@unique([cartId, productId, variantId])
+}
+
+// ---------------- Orders ----------------
+
+enum OrderStatus {
+  PENDING
+  PAID
+  CANCELLED
+}
+
+model Order {
+  id       String      @id @default(cuid())
+  status   OrderStatus @default(PENDING)
+  subtotal Int
+  shipping Int
+  total    Int
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  address Address?
+  items   OrderItem[]
+
+  createdAt DateTime @default(now())
+}
+
+model OrderItem {
+  id       String @id @default(cuid())
+  quantity Int
+
+  // Snapshotted at order time so later catalog edits never change past orders.
+  name  Json // Localized { en, bn }
+  image String
+  price Int
+
+  orderId String
+  order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  productId String?
+  product   Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
+
+  variantId String?
+  variant   SizeOption? @relation(fields: [variantId], references: [id], onDelete: SetNull)
+}
+
+model Address {
+  id         String @id @default(cuid())
+  fullName   String
+  phone      String
+  line1      String
+  line2      String?
+  city       String
+  postalCode String
+  country    String @default("Bangladesh")
+
+  orderId String @unique
+  order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+}

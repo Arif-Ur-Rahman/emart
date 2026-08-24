@@ -1,9 +1,9 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Search } from "lucide-react";
-import { searchProducts } from "@/lib/products";
+import type { Product } from "@/lib/types";
 import { useLanguage } from "@/i18n/language-context";
 import { formatPrice } from "@/lib/format";
 import { ProductImage } from "@/components/product/product-image";
@@ -14,9 +14,27 @@ export function SearchBar({ className }: { className?: string }) {
   const { t, tl, lang } = useLanguage();
   const [query, setQuery] = useState("");
   const [focused, setFocused] = useState(false);
+  const [results, setResults] = useState<Product[]>([]);
   const blurTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const results = query.trim() ? searchProducts(query).slice(0, 6) : [];
+  useEffect(() => {
+    const q = query.trim();
+    if (!q) return;
+    const controller = new AbortController();
+    const timer = setTimeout(() => {
+      fetch(`/api/search?q=${encodeURIComponent(q)}`, {
+        signal: controller.signal,
+      })
+        .then((res) => res.json())
+        .then((data: { results: Product[] }) => setResults(data.results))
+        .catch(() => {});
+    }, 150);
+    return () => {
+      clearTimeout(timer);
+      controller.abort();
+    };
+  }, [query]);
+
   const showDropdown = focused && query.trim().length > 0;
 
   function go(slug: string) {

@@ -2,15 +2,19 @@
 
 import {
   createContext,
+  startTransition,
   useCallback,
   useContext,
-  useEffect,
   useMemo,
   useState,
 } from "react";
 import type { CartItem, Product, SizeOption } from "@/lib/types";
-
-const STORAGE_KEY = "emart.cart";
+import {
+  addCartItem,
+  clearCart,
+  removeCartItem,
+  updateCartItemQty,
+} from "@/lib/actions/cart";
 
 type CartContextValue = {
   items: CartItem[];
@@ -30,31 +34,18 @@ function lineKey(productId: string, variantId?: string) {
   return variantId ? `${productId}::${variantId}` : productId;
 }
 
-export function CartProvider({ children }: { children: React.ReactNode }) {
-  const [items, setItems] = useState<CartItem[]>([]);
+export function CartProvider({
+  children,
+  initialItems,
+}: {
+  children: React.ReactNode;
+  initialItems: CartItem[];
+}) {
+  const [items, setItems] = useState<CartItem[]>(initialItems);
   const [isOpen, setOpen] = useState(false);
-  const [hydrated, setHydrated] = useState(false);
 
-  // Hydrate from localStorage once.
-  useEffect(() => {
-    try {
-      const raw = window.localStorage.getItem(STORAGE_KEY);
-      // Deliberately post-mount: reading localStorage during render would
-      // desync the server-rendered and initial client-rendered output.
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      if (raw) setItems(JSON.parse(raw) as CartItem[]);
-    } catch {
-      // ignore malformed storage
-    }
-    setHydrated(true);
-  }, []);
-
-  // Persist after hydration so we don't overwrite stored data on first render.
-  useEffect(() => {
-    if (!hydrated) return;
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
-  }, [items, hydrated]);
-
+  // Persisted server-side (see src/lib/actions/cart.ts); local state below
+  // is an optimistic mirror so the UI updates instantly.
   const addItem = useCallback(
     (product: Product, variant?: SizeOption, quantity = 1) => {
       const key = lineKey(product.id, variant?.id);
@@ -79,6 +70,9 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         return [...prev, newItem];
       });
       setOpen(true);
+      startTransition(() => {
+        addCartItem(product.id, variant?.id, quantity);
+      });
     },
     []
   );
@@ -89,13 +83,24 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         ? prev.filter((i) => i.key !== key)
         : prev.map((i) => (i.key === key ? { ...i, quantity } : i))
     );
+    startTransition(() => {
+      updateCartItemQty(key, quantity);
+    });
   }, []);
 
   const removeItem = useCallback((key: string) => {
     setItems((prev) => prev.filter((i) => i.key !== key));
+    startTransition(() => {
+      removeCartItem(key);
+    });
   }, []);
 
-  const clear = useCallback(() => setItems([]), []);
+  const clear = useCallback(() => {
+    setItems([]);
+    startTransition(() => {
+      clearCart();
+    });
+  }, []);
 
   const count = useMemo(
     () => items.reduce((sum, i) => sum + i.quantity, 0),

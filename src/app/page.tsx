@@ -1,36 +1,36 @@
-"use client";
-
 import { Hero } from "@/components/home/hero";
 import { FeatureBar } from "@/components/home/feature-bar";
 import { CategoryGrid } from "@/components/home/category-grid";
 import { ProductSection } from "@/components/home/product-section";
-import { useLanguage } from "@/i18n/language-context";
-import { getFeaturedProducts, getAllProducts } from "@/lib/products";
+import { getAllCategories } from "@/lib/data/categories";
+import { getFeaturedProducts, getAllProducts } from "@/lib/data/products";
 
-export default function HomePage() {
-  const { t } = useLanguage();
-  const featured = getFeaturedProducts();
-  const newArrivals = getAllProducts().filter((p) =>
-    p.badges?.includes("new")
-  );
-  const trending = getAllProducts()
+export default async function HomePage() {
+  const [categories, featured, allProducts] = await Promise.all([
+    getAllCategories(),
+    getFeaturedProducts(),
+    getAllProducts(),
+  ]);
+
+  const newArrivals = allProducts.filter((p) => p.badges?.includes("new"));
+  const trending = allProducts
     .filter((p) => (p.rating ?? 0) >= 4.6 && !p.featured)
     .slice(0, 8);
 
   return (
     <>
-      <Hero />
+      <Hero categories={categories} />
       <FeatureBar />
-      <CategoryGrid />
+      <CategoryGrid categories={categories} />
       <ProductSection
-        title={t("home.featured.title")}
-        subtitle={t("home.featured.subtitle")}
+        titleKey="home.featured.title"
+        subtitleKey="home.featured.subtitle"
         products={featured}
         viewAllHref="/shop"
       />
       {newArrivals.length > 0 && (
         <ProductSection
-          title={t("home.new.title")}
+          titleKey="home.new.title"
           products={newArrivals}
           viewAllHref="/shop"
         />

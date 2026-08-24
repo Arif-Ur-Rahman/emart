@@ -2,12 +2,11 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { getAllCategories } from "@/lib/categories";
+import type { Category } from "@/lib/types";
 import { useLanguage } from "@/i18n/language-context";
 
-export function CategoryGrid() {
+export function CategoryGrid({ categories }: { categories: Category[] }) {
   const { t, tl } = useLanguage();
-  const categories = getAllCategories();
 
   return (
     <section id="categories" className="mx-auto max-w-7xl scroll-mt-20 px-4 py-12">

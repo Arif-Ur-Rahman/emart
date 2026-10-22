@@ -1,18 +1,19 @@
 import "server-only";
 import { db } from "@/lib/db";
 import type { Localized } from "@/lib/types";
-import type { Prisma } from "@/generated/prisma/client";
+import type { OrderStatus, Prisma } from "@/generated/prisma/client";
 
 const include = {
   address: true,
-  items: true,
+  items: { orderBy: { id: "asc" } },
 } satisfies Prisma.OrderInclude;
 
 export type OrderWithDetails = Prisma.OrderGetPayload<{ include: typeof include }>;
 
 export type OrderSummary = {
   id: string;
-  status: string;
+  number: number;
+  status: OrderStatus;
   total: number;
   itemCount: number;
   createdAt: Date;
@@ -36,6 +37,7 @@ export async function getOrdersForUser(userId: string): Promise<OrderSummary[]> 
 
   return orders.map((order) => ({
     id: order.id,
+    number: order.number,
     status: order.status,
     total: order.total,
     itemCount: order.items.reduce((sum, i) => sum + i.quantity, 0),

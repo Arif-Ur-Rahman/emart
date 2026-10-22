@@ -6,7 +6,7 @@ import { ArrowRight } from "lucide-react";
 import { useLanguage } from "@/i18n/language-context";
 import type { Category } from "@/lib/types";
 import { buttonVariants } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { cn, isRemoteImage } from "@/lib/utils";
 
 export function Hero({ categories }: { categories: Category[] }) {
   const { t, tl } = useLanguage();
@@ -57,6 +57,7 @@ export function Hero({ categories }: { categories: Category[] }) {
                   alt={tl(c.name)}
                   fill
                   sizes="128px"
+                  unoptimized={isRemoteImage(c.image)}
                   className="object-cover"
                 />
               </div>

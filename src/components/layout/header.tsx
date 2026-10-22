@@ -2,7 +2,15 @@
 
 import { startTransition, useState } from "react";
 import Link from "next/link";
-import { Menu, ShoppingCart, Shirt, User as UserIcon, LogOut, Package } from "lucide-react";
+import {
+  Menu,
+  ShoppingCart,
+  Shirt,
+  User as UserIcon,
+  LogOut,
+  Package,
+  LayoutDashboard,
+} from "lucide-react";
 import { useLanguage } from "@/i18n/language-context";
 import { useCart } from "@/context/cart-context";
 import type { Category } from "@/lib/types";
@@ -27,7 +35,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-type SessionUser = { name?: string | null; email?: string | null } | null;
+type SessionUser = {
+  name?: string | null;
+  email?: string | null;
+  role?: "CUSTOMER" | "ADMIN";
+} | null;
 
 function AccountMenu({ user }: { user: SessionUser }) {
   const { t } = useLanguage();
@@ -61,6 +73,12 @@ function AccountMenu({ user }: { user: SessionUser }) {
           <Package className="h-4 w-4" />
           {t("auth.myOrders")}
         </DropdownMenuItem>
+        {user.role === "ADMIN" && (
+          <DropdownMenuItem render={<Link href="/admin" />}>
+            <LayoutDashboard className="h-4 w-4" />
+            {t("auth.admin")}
+          </DropdownMenuItem>
+        )}
         <DropdownMenuItem
           variant="destructive"
           onClick={() => {

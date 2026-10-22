@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { isRemoteImage } from "@/lib/utils";
 import { useLanguage } from "@/i18n/language-context";
 import type { Category, Product } from "@/lib/types";
 import { formatNumber } from "@/lib/format";
@@ -26,6 +27,7 @@ export function CategoryView({
           fill
           sizes="100vw"
           priority
+          unoptimized={isRemoteImage(category.image)}
           className="object-cover"
         />
         <div className="absolute inset-0 flex items-end bg-gradient-to-t from-black/70 via-black/10 to-transparent p-6 sm:p-8">

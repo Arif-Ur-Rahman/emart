@@ -44,6 +44,14 @@ export function CartProvider({
   const [items, setItems] = useState<CartItem[]>(initialItems);
   const [isOpen, setOpen] = useState(false);
 
+  // When the server re-renders the layout (e.g. after placing an order empties
+  // the cart), adopt its cart as the new source of truth.
+  const [serverItems, setServerItems] = useState(initialItems);
+  if (initialItems !== serverItems) {
+    setServerItems(initialItems);
+    setItems(initialItems);
+  }
+
   // Persisted server-side (see src/lib/actions/cart.ts); local state below
   // is an optimistic mirror so the UI updates instantly.
   const addItem = useCallback(

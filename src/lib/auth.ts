@@ -31,17 +31,25 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         const valid = await bcrypt.compare(password, user.passwordHash);
         if (!valid) return null;
 
-        return { id: user.id, name: user.name, email: user.email };
+        return { id: user.id, name: user.name, email: user.email, role: user.role };
       },
     }),
   ],
   callbacks: {
     jwt({ token, user }) {
-      if (user) token.sub = user.id;
+      if (user) {
+        token.sub = user.id;
+        // Snapshotted at login; used only for optimistic checks (proxy, nav).
+        // Admin pages and actions re-check the role in the database.
+        token.role = user.role ?? "CUSTOMER";
+      }
       return token;
     },
     session({ session, token }) {
-      if (session.user && token.sub) session.user.id = token.sub;
+      if (session.user && token.sub) {
+        session.user.id = token.sub;
+        session.user.role = token.role ?? "CUSTOMER";
+      }
       return session;
     },
   },

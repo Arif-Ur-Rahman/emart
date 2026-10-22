@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { isRemoteImage } from "@/lib/utils";
 import type { Category } from "@/lib/types";
 import { useLanguage } from "@/i18n/language-context";
 
@@ -23,7 +24,14 @@ export function CategoryGrid({ categories }: { categories: Category[] }) {
             <span
               className={`relative flex h-16 w-16 overflow-hidden rounded-full bg-gradient-to-br ${c.gradient} ring-1 ring-border transition-transform group-hover:scale-110`}
             >
-              <Image src={c.image} alt={tl(c.name)} fill sizes="64px" className="object-cover" />
+              <Image
+                src={c.image}
+                alt={tl(c.name)}
+                fill
+                sizes="64px"
+                unoptimized={isRemoteImage(c.image)}
+                className="object-cover"
+              />
             </span>
             <span className="text-xs font-semibold sm:text-sm">{tl(c.name)}</span>
           </Link>

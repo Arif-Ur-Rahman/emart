@@ -7,10 +7,15 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
 }
 
 // ---------------- Auth.js ----------------
+
+enum Role {
+  CUSTOMER
+  ADMIN
+}
 
 model User {
   id           String    @id @default(cuid())
@@ -19,6 +24,7 @@ model User {
   emailVerified DateTime?
   image        String?
   passwordHash String?
+  role         Role      @default(CUSTOMER)
 
   accounts Account[]
   sessions Session[]
@@ -92,6 +98,11 @@ model Product {
   reviewCount   Int?
   badges        Json? // ProductBadge[]
   featured      Boolean @default(false)
+  // Hidden from the storefront when false; existing carts/orders keep working.
+  active        Boolean @default(true)
+  // Units on hand when the product has no size options. With size options,
+  // stock is tracked per SizeOption instead and this is ignored.
+  stock         Int     @default(0)
 
   categoryId String
   category   Category @relation(fields: [categoryId], references: [id])
@@ -99,6 +110,9 @@ model Product {
   sizeOptions SizeOption[]
   cartItems   CartItem[]
   orderItems  OrderItem[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model SizeOption {
@@ -107,6 +121,9 @@ model SizeOption {
   label         Json // Localized { en, bn }
   price         Int
   originalPrice Int?
+  stock         Int    @default(0)
+  // Display order on the product page (S, M, L… rather than insertion order).
+  position      Int    @default(0)
 
   productId String
   product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
@@ -150,18 +167,40 @@ model CartItem {
 
 // ---------------- Orders ----------------
 
+// Cash-on-delivery lifecycle:
+//   PENDING → CONFIRMED → SHIPPED → DELIVERED (cash collected)
+// Any non-delivered order can move to CANCELLED, which restocks its items.
 enum OrderStatus {
   PENDING
-  PAID
+  CONFIRMED
+  SHIPPED
+  DELIVERED
   CANCELLED
 }
 
+enum PaymentMethod {
+  COD
+}
+
+enum PaymentStatus {
+  UNPAID
+  PAID
+}
+
 model Order {
-  id       String      @id @default(cuid())
-  status   OrderStatus @default(PENDING)
-  subtotal Int
-  shipping Int
-  total    Int
+  id            String        @id @default(cuid())
+  // Human-friendly order number shown to customers and staff (#1001, #1002…).
+  number        Int           @unique @default(autoincrement())
+  status        OrderStatus   @default(PENDING)
+  paymentMethod PaymentMethod @default(COD)
+  paymentStatus PaymentStatus @default(UNPAID)
+  subtotal      Int
+  shipping      Int
+  total         Int
+  // Delivery instructions from the customer at checkout.
+  note          String?
+  // Internal note visible only in the admin panel.
+  adminNote     String?
 
   userId String
   user   User   @relation(fields: [userId], references: [id])
@@ -169,7 +208,15 @@ model Order {
   address Address?
   items   OrderItem[]
 
-  createdAt DateTime @default(now())
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  confirmedAt DateTime?
+  shippedAt   DateTime?
+  deliveredAt DateTime?
+  cancelledAt DateTime?
+
+  @@index([status, createdAt])
+  @@index([userId, createdAt])
 }
 
 model OrderItem {
@@ -177,9 +224,10 @@ model OrderItem {
   quantity Int
 
   // Snapshotted at order time so later catalog edits never change past orders.
-  name  Json // Localized { en, bn }
-  image String
-  price Int
+  name         Json // Localized { en, bn }
+  variantLabel Json? // Localized { en, bn }, e.g. the size
+  image        String
+  price        Int
 
   orderId String
   order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)

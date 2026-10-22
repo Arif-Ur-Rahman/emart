@@ -1,4 +1,4 @@
-import type { Category } from "./types";
+import type { Category } from "../../src/lib/types";
 
 export const categories: Category[] = [
   {
@@ -38,11 +38,3 @@ export const categories: Category[] = [
     image: "/cloths/jeans/tuananh-blue-9yoXrG6Er_g-unsplash.jpg",
   },
 ];
-
-export function getAllCategories(): Category[] {
-  return categories;
-}
-
-export function getCategoryBySlug(slug: string): Category | undefined {
-  return categories.find((c) => c.slug === slug);
-}

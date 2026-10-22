@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { cn } from "@/lib/utils";
+import { cn, isRemoteImage } from "@/lib/utils";
 
 export function ProductImage({
   src,
@@ -22,6 +22,7 @@ export function ProductImage({
         fill
         sizes={sizes ?? "(min-width: 1024px) 25vw, 50vw"}
         priority={priority}
+        unoptimized={isRemoteImage(src)}
         className="object-cover"
       />
     </div>

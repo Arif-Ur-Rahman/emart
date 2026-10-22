@@ -2,7 +2,6 @@
 
 import { z } from "zod";
 import bcrypt from "bcryptjs";
-import { redirect } from "next/navigation";
 import { AuthError } from "next-auth";
 import { db } from "@/lib/db";
 import { signIn, signOut } from "@/lib/auth";
@@ -17,6 +16,14 @@ const SignupSchema = z.object({
     .trim(),
 });
 
+/** Only same-origin relative paths, so the login form can't be used as an open redirect. */
+function safeCallbackUrl(value: FormDataEntryValue | null): string {
+  if (typeof value !== "string" || !value.startsWith("/") || value.startsWith("//")) {
+    return "/";
+  }
+  return value;
+}
+
 export type AuthFormState =
   | {
       errors?: {
@@ -25,6 +32,13 @@ export type AuthFormState =
         password?: string[];
       };
       message?: string;
+      /**
+       * Where to go after a successful login/signup. The client navigates with
+       * a full page load: a server-side redirect() would render the destination
+       * in this same request, before the browser has the new session cookie,
+       * so auth-gated pages (and the header) would still look logged out.
+       */
+      redirectTo?: string;
     }
   | undefined;
 
@@ -54,7 +68,7 @@ export async function signup(
 
   await signIn("credentials", { email, password, redirect: false });
   await mergeGuestCartIntoUser(user.id);
-  redirect("/");
+  return { redirectTo: safeCallbackUrl(formData.get("callbackUrl")) };
 }
 
 export async function login(
@@ -79,7 +93,7 @@ export async function login(
 
   const user = await db.user.findUnique({ where: { email } });
   if (user) await mergeGuestCartIntoUser(user.id);
-  redirect("/");
+  return { redirectTo: safeCallbackUrl(formData.get("callbackUrl")) };
 }
 
 export async function logout() {

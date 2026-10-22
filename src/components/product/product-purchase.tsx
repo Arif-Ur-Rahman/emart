@@ -5,7 +5,7 @@ import { ShoppingCart, Check } from "lucide-react";
 import type { Product, SizeOption } from "@/lib/types";
 import { useCart } from "@/context/cart-context";
 import { useLanguage } from "@/i18n/language-context";
-import { formatPrice, discountPercent } from "@/lib/format";
+import { formatPrice, formatNumber, discountPercent } from "@/lib/format";
 import { QuantitySelector } from "./quantity-selector";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -14,7 +14,7 @@ export function ProductPurchase({ product }: { product: Product }) {
   const { t, tl, lang } = useLanguage();
   const { addItem } = useCart();
   const [variant, setVariant] = useState<SizeOption | undefined>(
-    product.sizeOptions?.[0]
+    product.sizeOptions?.find((o) => o.stock > 0) ?? product.sizeOptions?.[0]
   );
   const [qty, setQty] = useState(1);
   const [justAdded, setJustAdded] = useState(false);
@@ -22,8 +22,16 @@ export function ProductPurchase({ product }: { product: Product }) {
   const price = variant?.price ?? product.price;
   const originalPrice = variant?.originalPrice ?? product.originalPrice;
   const discount = discountPercent(price, originalPrice);
+  const available = variant?.stock ?? product.stock;
+  const inStock = available > 0;
+
+  function selectVariant(option: SizeOption) {
+    setVariant(option);
+    setQty((q) => Math.max(1, Math.min(q, option.stock)));
+  }
 
   function handleAdd() {
+    if (!inStock) return;
     addItem(product, variant, qty);
     setJustAdded(true);
     setTimeout(() => setJustAdded(false), 1500);
@@ -55,12 +63,16 @@ export function ProductPurchase({ product }: { product: Product }) {
               <button
                 key={opt.id}
                 type="button"
-                onClick={() => setVariant(opt)}
+                onClick={() => selectVariant(opt)}
+                disabled={opt.stock === 0}
+                title={opt.stock === 0 ? t("product.soldOut") : undefined}
                 className={cn(
                   "rounded-full border px-4 py-2 text-sm font-medium transition",
                   variant?.id === opt.id
                     ? "border-brand bg-brand text-brand-foreground"
-                    : "hover:border-brand"
+                    : "hover:border-brand",
+                  opt.stock === 0 &&
+                    "cursor-not-allowed text-muted-foreground line-through opacity-60 hover:border-border"
                 )}
               >
                 {tl(opt.label)}
@@ -72,7 +84,17 @@ export function ProductPurchase({ product }: { product: Product }) {
 
       <div>
         <p className="mb-2 text-sm font-medium">{t("product.quantity")}</p>
-        <QuantitySelector value={qty} onChange={setQty} min={1} />
+        <QuantitySelector
+          value={qty}
+          onChange={setQty}
+          min={1}
+          max={Math.max(1, Math.min(available, 99))}
+        />
+        {inStock && available <= 5 && (
+          <p className="mt-2 text-sm font-medium text-brand">
+            {t("product.lowStock").replace("{n}", formatNumber(available, lang))}
+          </p>
+        )}
       </div>
 
       <div className="flex flex-col gap-3 sm:flex-row">
@@ -80,8 +102,11 @@ export function ProductPurchase({ product }: { product: Product }) {
           size="lg"
           className="flex-1 rounded-full"
           onClick={handleAdd}
+          disabled={!inStock}
         >
-          {justAdded ? (
+          {!inStock ? (
+            t("product.outOfStock")
+          ) : justAdded ? (
             <>
               <Check className="mr-1 h-5 w-5" />
               {t("product.added")}

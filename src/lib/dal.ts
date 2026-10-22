@@ -12,6 +12,27 @@ export const verifySession = cache(async () => {
   return { isAuth: true, userId: session.user.id };
 });
 
+/**
+ * Authoritative admin check for admin pages and Server Actions. Reads the
+ * role from the database rather than the session token, so a demoted admin
+ * loses access immediately.
+ */
+export const verifyAdmin = cache(async () => {
+  const session = await auth();
+  if (!session?.user?.id) {
+    redirect("/login?callbackUrl=/admin");
+  }
+
+  const user = await db.user.findUnique({
+    where: { id: session.user.id },
+    select: { id: true, name: true, email: true, role: true },
+  });
+  if (user?.role !== "ADMIN") {
+    redirect("/");
+  }
+  return user;
+});
+
 export const getCurrentUser = cache(async () => {
   const session = await auth();
   if (!session?.user?.id) return null;

@@ -6,8 +6,12 @@ import type { Product, ProductBadge, SizeOption } from "@/lib/types";
 
 const include = {
   category: { select: { slug: true } },
-  sizeOptions: true,
+  sizeOptions: { orderBy: { position: "asc" } },
 } satisfies Prisma.ProductInclude;
+
+/** Storefront queries only ever see products that aren't hidden. */
+const visible = { active: true } satisfies Prisma.ProductWhereInput;
+const orderBy = { createdAt: "asc" } satisfies Prisma.ProductOrderByWithRelationInput;
 
 type ProductRow = Prisma.ProductGetPayload<{ include: typeof include }>;
 
@@ -17,6 +21,7 @@ function toProduct(row: ProductRow): Product {
     label: option.label as SizeOption["label"],
     price: option.price,
     originalPrice: option.originalPrice ?? undefined,
+    stock: option.stock,
   }));
 
   return {
@@ -30,6 +35,9 @@ function toProduct(row: ProductRow): Product {
     categorySlug: row.category.slug,
     image: row.image,
     sizeOptions: sizeOptions.length ? sizeOptions : undefined,
+    stock: sizeOptions.length
+      ? sizeOptions.reduce((sum, option) => sum + option.stock, 0)
+      : row.stock,
     rating: row.rating ?? undefined,
     reviewCount: row.reviewCount ?? undefined,
     badges: (row.badges as ProductBadge[] | null) ?? undefined,
@@ -38,13 +46,13 @@ function toProduct(row: ProductRow): Product {
 }
 
 export const getAllProducts = cache(async (): Promise<Product[]> => {
-  const rows = await db.product.findMany({ include });
+  const rows = await db.product.findMany({ where: visible, include, orderBy });
   return rows.map(toProduct);
 });
 
 export const getProductBySlug = cache(
   async (slug: string): Promise<Product | undefined> => {
-    const row = await db.product.findUnique({ where: { slug }, include });
+    const row = await db.product.findUnique({ where: { slug, ...visible }, include });
     return row ? toProduct(row) : undefined;
   }
 );
@@ -52,15 +60,20 @@ export const getProductBySlug = cache(
 export const getProductsByCategory = cache(
   async (categorySlug: string): Promise<Product[]> => {
     const rows = await db.product.findMany({
-      where: { category: { slug: categorySlug } },
+      where: { category: { slug: categorySlug }, ...visible },
       include,
+      orderBy,
     });
     return rows.map(toProduct);
   }
 );
 
 export const getFeaturedProducts = cache(async (): Promise<Product[]> => {
-  const rows = await db.product.findMany({ where: { featured: true }, include });
+  const rows = await db.product.findMany({
+    where: { featured: true, ...visible },
+    include,
+    orderBy,
+  });
   return rows.map(toProduct);
 });
 
@@ -72,8 +85,10 @@ export async function getRelatedProducts(
     where: {
       category: { slug: product.categorySlug },
       id: { not: product.id },
+      ...visible,
     },
     include,
+    orderBy,
     take: limit,
   });
   return rows.map(toProduct);
@@ -83,7 +98,7 @@ export async function searchProducts(query: string): Promise<Product[]> {
   const q = query.trim().toLowerCase();
   if (!q) return [];
 
-  const rows = await db.product.findMany({ include });
+  const rows = await db.product.findMany({ where: visible, include, orderBy });
   return rows
     .map(toProduct)
     .filter(

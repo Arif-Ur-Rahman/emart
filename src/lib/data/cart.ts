@@ -43,6 +43,7 @@ export async function getCart(): Promise<CartItem[]> {
   const cartId = await resolveCartId();
   if (!cartId) return [];
 
-  const rows = await db.cartItem.findMany({ where: { cartId }, include });
+  // cuid ids sort by creation time, so lines keep the order they were added in.
+  const rows = await db.cartItem.findMany({ where: { cartId }, include, orderBy: { id: "asc" } });
   return rows.map(toCartItem);
 }

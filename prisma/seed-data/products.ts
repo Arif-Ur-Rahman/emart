@@ -1,9 +1,15 @@
-import type { Product, SizeOption } from "./types";
+import type { Product, SizeOption } from "../../src/lib/types";
+
+// Stock is assigned by the seed script, so catalog entries here omit it.
+type SeedSizeOption = Omit<SizeOption, "stock">;
+export type SeedProduct = Omit<Product, "stock" | "sizeOptions"> & {
+  sizeOptions?: SeedSizeOption[];
+};
 
 /** Convenience helper for building bilingual size options. */
 function sizes(
   opts: { id: string; en: string; bn: string; price: number; originalPrice?: number }[]
-): SizeOption[] {
+): SeedSizeOption[] {
   return opts.map((o) => ({
     id: o.id,
     label: { en: o.en, bn: o.bn },
@@ -12,7 +18,7 @@ function sizes(
   }));
 }
 
-function apparelSizes(price: number, originalPrice?: number): SizeOption[] {
+function apparelSizes(price: number, originalPrice?: number): SeedSizeOption[] {
   return sizes([
     { id: "s", en: "S", bn: "এস", price, originalPrice },
     { id: "m", en: "M", bn: "এম", price, originalPrice },
@@ -21,7 +27,7 @@ function apparelSizes(price: number, originalPrice?: number): SizeOption[] {
   ]);
 }
 
-function jeansSizes(price: number, originalPrice?: number): SizeOption[] {
+function jeansSizes(price: number, originalPrice?: number): SeedSizeOption[] {
   return sizes([
     { id: "w30", en: "30", bn: "৩০", price, originalPrice },
     { id: "w32", en: "32", bn: "৩২", price, originalPrice },
@@ -30,7 +36,7 @@ function jeansSizes(price: number, originalPrice?: number): SizeOption[] {
   ]);
 }
 
-export const products: Product[] = [
+export const products: SeedProduct[] = [
   // ---------------- Coats ----------------
   {
     id: "coat-black-classic",
@@ -166,38 +172,3 @@ export const products: Product[] = [
     sizeOptions: jeansSizes(1950),
   },
 ];
-
-// ---------------- Getters (the seam for a future backend) ----------------
-
-export function getAllProducts(): Product[] {
-  return products;
-}
-
-export function getProductBySlug(slug: string): Product | undefined {
-  return products.find((p) => p.slug === slug);
-}
-
-export function getProductsByCategory(categorySlug: string): Product[] {
-  return products.filter((p) => p.categorySlug === categorySlug);
-}
-
-export function getFeaturedProducts(): Product[] {
-  return products.filter((p) => p.featured);
-}
-
-export function getRelatedProducts(product: Product, limit = 4): Product[] {
-  return products
-    .filter((p) => p.categorySlug === product.categorySlug && p.id !== product.id)
-    .slice(0, limit);
-}
-
-export function searchProducts(query: string): Product[] {
-  const q = query.trim().toLowerCase();
-  if (!q) return [];
-  return products.filter(
-    (p) =>
-      p.name.en.toLowerCase().includes(q) ||
-      p.name.bn.includes(query.trim()) ||
-      p.shortDesc.en.toLowerCase().includes(q)
-  );
-}

@@ -12,6 +12,8 @@ export type SizeOption = {
   label: Localized;
   price: number;
   originalPrice?: number;
+  /** Units available to order in this size. */
+  stock: number;
 };
 
 export type Product = {
@@ -24,9 +26,11 @@ export type Product = {
   price: number;
   originalPrice?: number;
   categorySlug: string;
-  /** Path to the product photo under /public. */
+  /** Path to the product photo under /public, or an absolute https URL. */
   image: string;
   sizeOptions?: SizeOption[];
+  /** Units available to order. With sizeOptions, the sum across all sizes. */
+  stock: number;
   rating?: number;
   reviewCount?: number;
   badges?: ProductBadge[];

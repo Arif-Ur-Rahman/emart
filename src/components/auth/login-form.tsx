@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useEffect } from "react";
 import Link from "next/link";
 import { useLanguage } from "@/i18n/language-context";
 import { login, type AuthFormState } from "@/lib/actions/auth";
@@ -14,12 +14,18 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 
-export function LoginForm() {
+export function LoginForm({ callbackUrl }: { callbackUrl?: string }) {
   const { t } = useLanguage();
   const [state, action, pending] = useActionState<AuthFormState, FormData>(
     login,
     undefined
   );
+
+  useEffect(() => {
+    if (state?.redirectTo) {
+      window.location.assign(state.redirectTo);
+    }
+  }, [state?.redirectTo]);
 
   return (
     <Card>
@@ -29,6 +35,7 @@ export function LoginForm() {
       </CardHeader>
       <CardContent>
         <form action={action} className="space-y-4">
+          {callbackUrl && <input type="hidden" name="callbackUrl" value={callbackUrl} />}
           <div className="space-y-1.5">
             <label htmlFor="email" className="text-sm font-medium">
               {t("auth.email")}
@@ -50,12 +57,12 @@ export function LoginForm() {
           {state?.message && (
             <p className="text-sm text-destructive">{state.message}</p>
           )}
-          <Button type="submit" disabled={pending} className="w-full">
+          <Button type="submit" disabled={pending || Boolean(state?.redirectTo)} className="w-full">
             {t("auth.login")}
           </Button>
           <p className="text-center text-sm text-muted-foreground">
             {t("auth.login.noAccount")}{" "}
-            <Link href="/signup" className="font-medium text-accent-foreground hover:underline">
+            <Link href={callbackUrl ? `/signup?callbackUrl=${encodeURIComponent(callbackUrl)}` : "/signup"} className="font-medium text-accent-foreground hover:underline">
               {t("auth.signup")}
             </Link>
           </p>

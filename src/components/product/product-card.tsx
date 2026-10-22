@@ -27,7 +27,8 @@ export function ProductCard({ product }: { product: Product }) {
   const { t, tl, lang } = useLanguage();
   const { addItem } = useCart();
   const discount = discountPercent(product.price, product.originalPrice);
-  const defaultVariant = product.sizeOptions?.[0];
+  const defaultVariant = product.sizeOptions?.find((o) => o.stock > 0);
+  const soldOut = product.stock === 0;
 
   return (
     <div className="group relative flex flex-col overflow-hidden rounded-2xl border bg-card transition-shadow hover:shadow-md">
@@ -38,8 +39,16 @@ export function ProductCard({ product }: { product: Product }) {
         <ProductImage
           src={product.image}
           alt={tl(product.name)}
-          className="h-full w-full transition-transform duration-300 group-hover:scale-105"
+          className={cn(
+            "h-full w-full transition-transform duration-300 group-hover:scale-105",
+            soldOut && "opacity-60 grayscale"
+          )}
         />
+        {soldOut && (
+          <span className="absolute bottom-2 left-2 rounded-full bg-background/90 px-2.5 py-1 text-xs font-semibold text-foreground backdrop-blur">
+            {t("product.soldOut")}
+          </span>
+        )}
         <div className="absolute left-2 top-2 flex flex-col gap-1">
           {discount !== null && (
             <span className="rounded-full bg-foreground px-2 py-0.5 text-xs font-semibold text-background">
@@ -95,7 +104,8 @@ export function ProductCard({ product }: { product: Product }) {
           </div>
           <Button
             size="icon"
-            aria-label={t("product.addToCart")}
+            aria-label={soldOut ? t("product.soldOut") : t("product.addToCart")}
+            disabled={soldOut}
             onClick={() => addItem(product, defaultVariant, 1)}
             className="h-9 w-9 shrink-0 rounded-full"
           >

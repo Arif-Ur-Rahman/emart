@@ -3,8 +3,8 @@
 import Link from "next/link";
 import { Package } from "lucide-react";
 import { useLanguage } from "@/i18n/language-context";
-import type { TranslationKey } from "@/i18n/dictionaries";
 import { formatPrice, formatNumber } from "@/lib/format";
+import { formatOrderNumber } from "@/lib/order-status";
 import type { OrderSummary } from "@/lib/data/orders";
 import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -35,7 +35,7 @@ export function OrderHistory({ orders }: { orders: OrderSummary[] }) {
                 <CardContent className="flex items-center justify-between gap-4">
                   <div>
                     <p className="font-medium">
-                      {t("order.number")} #{order.id.slice(-8).toUpperCase()}
+                      {t("order.number")} {formatOrderNumber(order.number)}
                     </p>
                     <p className="text-sm text-muted-foreground">
                       {new Date(order.createdAt).toLocaleDateString(
@@ -50,7 +50,7 @@ export function OrderHistory({ orders }: { orders: OrderSummary[] }) {
                     <div className="text-right">
                       <p className="font-semibold">{formatPrice(order.total, lang)}</p>
                       <p className="text-xs text-muted-foreground">
-                        {t(`order.status.${order.status}` as TranslationKey)}
+                        {t(`order.status.${order.status}`)}
                       </p>
                     </div>
                     <Link

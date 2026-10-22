@@ -7,13 +7,6 @@ import {
   Noto_Serif_Bengali,
 } from "next/font/google";
 import "./globals.css";
-import { Providers } from "@/components/providers";
-import { AnnouncementBar } from "@/components/layout/announcement-bar";
-import { Header } from "@/components/layout/header";
-import { Footer } from "@/components/layout/footer";
-import { getAllCategories } from "@/lib/data/categories";
-import { getCart } from "@/lib/data/cart";
-import { auth } from "@/lib/auth";
 
 const sans = Plus_Jakarta_Sans({
   variable: "--font-sans",
@@ -49,30 +42,17 @@ export const metadata: Metadata = {
     "Coats, shirts, t-shirts and jeans delivered to your door — everyday fashion built for comfort and style.",
 };
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const [categories, session, cartItems] = await Promise.all([
-    getAllCategories(),
-    auth(),
-    getCart(),
-  ]);
-
   return (
     <html
       lang="en"
       className={`${sans.variable} ${heading.variable} ${mono.variable} ${bangla.variable} ${headingBangla.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-background">
-        <Providers initialCartItems={cartItems}>
-          <AnnouncementBar />
-          <Header categories={categories} user={session?.user ?? null} />
-          <main className="flex-1">{children}</main>
-          <Footer categories={categories} />
-        </Providers>
-      </body>
+      <body className="min-h-full flex flex-col bg-background">{children}</body>
     </html>
   );
 }
